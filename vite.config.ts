@@ -17,9 +17,6 @@ export default defineConfig({
   },
   resolve: {
     alias: {
-      pages: path.resolve(__dirname, './src/pages'),
-      routers: path.resolve(__dirname, './src/routers'),
-      services: path.resolve(__dirname, './src/services'),
       '~': path.resolve(__dirname, './src')
     }
   }

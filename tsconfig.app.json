@@ -24,9 +24,6 @@
 
     "baseUrl": ".",
     "paths": {
-      "pages/*": ["src/pages/*"],
-      "routers/*": ["src/routers/*"],
-      "services/*": ["src/services/*"],
       "~/*": ["src/*"]
     }
   },
