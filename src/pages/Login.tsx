@@ -8,6 +8,9 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Form } from '~/components/ui/form';
 import Textbox from '~/components/ui/Form/Textbox';
 import { Link } from 'react-router-dom';
+import Muted from '~/components/ui/Typography/muted';
+import { ModeToggle } from '~/components/mode-toggle';
+import { useLogin } from '~/queries/Users';
 
 /**
  * Define schema
@@ -33,25 +36,29 @@ const Login = () => {
   });
   const { control, handleSubmit } = form;
 
+  // Mutation hooks
+  const login = useLogin();
+
   // Define submit handler
-  function onSubmit(values: LoginType) {
+  async function onSubmit(values: LoginType) {
     console.log(values);
+    await login.mutateAsync(values);
   }
 
   return (
     <div className='flex h-screen items-center justify-center bg-primary'>
-      <div className='h-screen w-screen sm:h-3/5 sm:w-3/6 md:w-5/12 lg:w-1/3 xl:w-1/4 bg-secondary flex items-center justify-center sm:rounded-lg'>
+      <div className='h-screen w-screen sm:h-auto sm:w-3/6 md:w-5/12 lg:w-1/3 xl:w-1/4 bg-secondary flex items-center justify-center sm:rounded-lg p-5'>
         <div className='sm:w-4/5 2xl:w-2/3 flex flex-col items-center justify-center bg-secondary'>
           {/* icon */}
-          <Twitter color='black' fill='black' size={48} />
+          <Twitter size={48} fill='currentColor' />
 
           {/* tittle */}
-          <H2 className='mt-2 dark:text-white'>Sign in to Twitter</H2>
+          <H2 className='mt-2 dark:text-white'>Login to Twitter</H2>
 
           {/* Login with vendor */}
           <Button className='mt-2 w-full rounded-3xl' variant={'outline'}>
             <img src={googleLogo} alt='Google logo' className='h-6' />
-            <p className='dark:text-white'>Login with Google</p>
+            Login with Google
           </Button>
 
           {/* Divider */}
@@ -68,36 +75,47 @@ const Login = () => {
               className='space-y-3 w-full'
             >
               {/* Email */}
-              <Textbox control={control} name='email' placeholder='Email' />
+              <Textbox
+                control={control}
+                name='email'
+                placeholder='Email'
+                autoComplete='on'
+              />
+
               {/* Password */}
               <Textbox
                 control={control}
                 name='password'
                 placeholder='Password'
+                type='password'
+                autoComplete='current-password'
               />
 
               {/* Submit button */}
               <Button className='mt-2 w-full rounded-3xl' variant={'outline'}>
-                <p className='dark:text-white'>Login</p>
+                Sign in
               </Button>
             </form>
           </Form>
 
           {/* Forgot password button */}
           <Button className='mt-2 w-full rounded-3xl' variant={'default'}>
-            <p>Forgot password?</p>
+            Forgot password?
           </Button>
 
           {/* Sign up link */}
           <div className='mt-5 w-full flex items-center justify-start'>
-            <p className='text-sm text-muted-foreground'>
-              Don't have an account?{' '}
-            </p>
-            <Link to={'register'}>
+            <Muted>Don't have an account? </Muted>
+            <Link to={'/register'}>
               <Button variant={'link'} className='p-0 m-2'>
                 <p>Sign up</p>
               </Button>
             </Link>
+          </div>
+
+          {/* Toggle */}
+          <div className='w-full flex justify-end'>
+            <ModeToggle />
           </div>
         </div>
       </div>

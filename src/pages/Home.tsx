@@ -59,45 +59,47 @@ const Home = () => {
   console.log('state errors: ', getValues());
 
   return (
-    <div className='border-b-gray-900 m-5 p-5 dark'>
-      <Form {...form}>
-        <form onSubmit={handleSubmit(onSubmit)} className='space-y-8'>
-          <FormField
-            control={control}
-            name='username'
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Username</FormLabel>
-                <FormControl>
-                  <Input placeholder='shadcn' {...field} />
-                </FormControl>
-                <FormDescription>
-                  This is your public display name.
-                </FormDescription>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <Textbox
-            control={control}
-            name='test1'
-            label='ShadCN'
-            placeholder='ShadCN'
-            description='ShadCN'
-          />
-          <Textbox
-            control={control}
-            name='test2'
-            label='ShadCN'
-            placeholder='ShadCN'
-          />
-          <Button type='submit' size={'lg'} variant={'default'}>
-            <Label>
-              <p>Submit</p>
-            </Label>
-          </Button>
-        </form>
-      </Form>
+    <div className='dark'>
+      <div className='border-b-gray-900 m-5 p-5'>
+        <Form {...form}>
+          <form onSubmit={handleSubmit(onSubmit)} className='space-y-8'>
+            <FormField
+              control={control}
+              name='username'
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Username</FormLabel>
+                  <FormControl>
+                    <Input placeholder='shadcn' {...field} />
+                  </FormControl>
+                  <FormDescription>
+                    This is your public display name.
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <Textbox
+              control={control}
+              name='test1'
+              label='ShadCN'
+              placeholder='ShadCN'
+              description='ShadCN'
+            />
+            <Textbox
+              control={control}
+              name='test2'
+              label='ShadCN'
+              placeholder='ShadCN'
+            />
+            <Button type='submit' size={'lg'} variant={'default'}>
+              <Label>
+                <p>Submit</p>
+              </Label>
+            </Button>
+          </form>
+        </Form>
+      </div>
     </div>
   );
 };
