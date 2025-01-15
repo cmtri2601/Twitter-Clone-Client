@@ -8,35 +8,32 @@ import {
   FormMessage
 } from '../form';
 import { Input } from '../input';
+import React from 'react';
 
 type FormTextbox<
   TFieldValues extends FieldValues = FieldValues,
   TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
 > = {
-  // control: Control<Record<any, any>>;
-  // name: string;
-
   label?: string;
-  placeholder?: string;
   description?: string;
   isMessage?: boolean;
-} & UseControllerProps<TFieldValues, TName>;
+} & UseControllerProps<TFieldValues, TName> &
+  React.InputHTMLAttributes<HTMLInputElement>;
 
-const Textbox = <
+const TextboxInner = <
   TFieldValues extends FieldValues = FieldValues,
   TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
 >(
-  props: FormTextbox<TFieldValues, TName>
-) => {
-  const {
+  {
     control,
     name,
     label,
-    placeholder,
     description,
-    isMessage = true
-  } = props;
-
+    isMessage = true,
+    ...props
+  }: FormTextbox<TFieldValues, TName>,
+  ref: React.Ref<HTMLInputElement>
+) => {
   return (
     <FormField
       control={control}
@@ -45,11 +42,7 @@ const Textbox = <
         <FormItem>
           {label && <FormLabel>{label}</FormLabel>}
           <FormControl>
-            <Input
-              placeholder={placeholder}
-              {...field}
-              value={field.value || ''}
-            />
+            <Input {...field} value={field.value || ''} {...props} ref={ref} />
           </FormControl>
           {description && <FormDescription>{description}</FormDescription>}
           {isMessage && <FormMessage />}
@@ -58,5 +51,17 @@ const Textbox = <
     />
   );
 };
+
+// if use custom ref, need set ref (in react 19, ref as a prop )
+// forwardRef no need to set ref
+// Type assertion (Cast)
+const Textbox = React.forwardRef(TextboxInner) as <
+  TFieldValues extends FieldValues = FieldValues,
+  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
+>(
+  props: FormTextbox<TFieldValues, TName> & {
+    ref?: React.ForwardedRef<HTMLInputElement>;
+  }
+) => ReturnType<typeof TextboxInner>;
 
 export default Textbox;
