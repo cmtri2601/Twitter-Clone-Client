@@ -80,6 +80,7 @@ const Register = () => {
                 control={control}
                 name='firstName'
                 placeholder='First name'
+                maxLength={30}
               />
 
               {/* Last name */}
@@ -88,6 +89,7 @@ const Register = () => {
                 name='lastName'
                 placeholder='Last name'
                 autoComplete='off'
+                maxLength={30}
               />
 
               {/* Password */}
@@ -97,6 +99,7 @@ const Register = () => {
                 placeholder='Password'
                 type='password'
                 autoComplete='current-password'
+                maxLength={50}
               />
 
               {/* Confirm password */}
@@ -106,6 +109,7 @@ const Register = () => {
                 placeholder='Confirm password'
                 type='password'
                 autoComplete='off'
+                maxLength={50}
               />
 
               {/* Date of birth */}

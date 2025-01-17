@@ -89,6 +89,7 @@ const Login = () => {
                 placeholder='Password'
                 type='password'
                 autoComplete='current-password'
+                maxLength={50}
               />
 
               {/* Submit button */}
