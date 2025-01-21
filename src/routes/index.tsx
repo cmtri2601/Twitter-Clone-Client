@@ -9,6 +9,7 @@ import {
 import ErrorFallback from '~/pages/ErrorFallback';
 import Layout from '~/pages/Layout';
 import Loading from '~/pages/Loading';
+import NotFound from '~/pages/NotFound';
 
 const createRouter = () => {
   const Home = lazy(() => import('~/pages/Home'));
@@ -26,6 +27,7 @@ const createRouter = () => {
   return createBrowserRouter(
     createRoutesFromElements(
       <Route path='/' element={<ErrorBoundaryLayout />}>
+        {/* Register */}
         <Route
           path='/register'
           element={
@@ -35,6 +37,7 @@ const createRouter = () => {
           }
         />
 
+        {/* Login */}
         <Route
           path='/login'
           element={
@@ -44,9 +47,12 @@ const createRouter = () => {
           }
         />
 
-        <Route path='/login' element={<TestTailWind />} />
+        {/* Test tailwind */}
+        <Route path='/test-tw' element={<TestTailWind />} />
 
+        {/* Require authorization */}
         <Route path='/' element={<Layout />}>
+          {/* Home */}
           <Route
             index
             element={
@@ -55,6 +61,8 @@ const createRouter = () => {
               </Suspense>
             }
           />
+
+          {/* Profile */}
           <Route
             path='profile'
             element={
@@ -66,6 +74,16 @@ const createRouter = () => {
             // action={contactAction}
           />
         </Route>
+
+        {/* Not Found */}
+        <Route
+          path='*'
+          element={
+            <Suspense fallback={<Loading />}>
+              <NotFound />
+            </Suspense>
+          }
+        />
       </Route>
     ),
     {
