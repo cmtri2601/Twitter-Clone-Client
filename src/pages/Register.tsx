@@ -3,7 +3,7 @@ import { Twitter } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
 import { z } from 'zod';
-import { ModeToggle } from '~/components/mode-toggle';
+import { ModeToggle } from '~/components/darkmode/mode-toggle';
 import { Button } from '~/components/ui/button';
 import { Form } from '~/components/ui/form';
 import DatePicker from '~/components/ui/Form/DatePicker';

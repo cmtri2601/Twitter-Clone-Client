@@ -3,7 +3,7 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { ErrorBoundary } from 'react-error-boundary';
 import { RouterProvider } from 'react-router-dom';
 import queryClient from './api/queryClient';
-import { ThemeProvider } from './components/theme-provider';
+import { ThemeProvider } from './components/darkmode/theme-provider';
 import ErrorFallback from './pages/ErrorFallback';
 import router from './routes';
 

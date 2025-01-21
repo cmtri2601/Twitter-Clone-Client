@@ -9,7 +9,7 @@ import { Form } from '~/components/ui/form';
 import Textbox from '~/components/ui/Form/Textbox';
 import { Link } from 'react-router-dom';
 import Muted from '~/components/ui/Typography/muted';
-import { ModeToggle } from '~/components/mode-toggle';
+import { ModeToggle } from '~/components/darkmode/mode-toggle';
 import { useLogin } from '~/queries/Users';
 
 /**
