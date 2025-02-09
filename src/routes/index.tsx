@@ -7,9 +7,12 @@ import {
   Route
 } from 'react-router-dom';
 import ErrorFallback from '~/pages/ErrorFallback';
+import Explore from '~/pages/Explore';
 import Layout from '~/pages/Layout';
 import Loading from '~/pages/Loading';
+import Message from '~/pages/Message';
 import NotFound from '~/pages/NotFound';
+import Notification from '~/pages/Notification';
 
 const createRouter = () => {
   const Home = lazy(() => import('~/pages/Home'));
@@ -58,6 +61,46 @@ const createRouter = () => {
             element={
               <Suspense fallback={<Loading />}>
                 <Home />
+              </Suspense>
+            }
+          />
+
+          {/* Home */}
+          <Route
+            path='home'
+            element={
+              <Suspense fallback={<Loading />}>
+                <Home />
+              </Suspense>
+            }
+          />
+
+          {/* Explore */}
+          <Route
+            path='explore'
+            element={
+              <Suspense fallback={<Loading />}>
+                <Explore />
+              </Suspense>
+            }
+          />
+
+          {/* Notification */}
+          <Route
+            path='notification'
+            element={
+              <Suspense fallback={<Loading />}>
+                <Notification />
+              </Suspense>
+            }
+          />
+
+          {/* Message */}
+          <Route
+            path='message'
+            element={
+              <Suspense fallback={<Loading />}>
+                <Message />
               </Suspense>
             }
           />
