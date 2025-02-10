@@ -2,7 +2,9 @@ import { DropdownMenu } from '@radix-ui/react-dropdown-menu';
 import {
   Bell,
   ChevronUp,
+  Eclipse,
   House,
+  LogOut,
   Mail,
   Search,
   Twitter,
@@ -10,9 +12,17 @@ import {
   UserRound
 } from 'lucide-react';
 import { NavLink, Outlet } from 'react-router-dom';
+import { useTheme } from '~/components/darkmode/theme-provider';
 import {
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuPortal,
+  DropdownMenuSeparator,
+  DropdownMenuShortcut,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
   DropdownMenuTrigger
 } from '~/components/ui/dropdown-menu';
 import {
@@ -36,6 +46,8 @@ const Layout = () => {
     { name: 'Message', url: '/message', icon: Mail },
     { name: 'Profile', url: '/profile', icon: UserRound }
   ];
+
+  const { setTheme } = useTheme();
 
   return (
     <div className='w-screen'>
@@ -77,6 +89,7 @@ const Layout = () => {
               <SidebarMenu>
                 <SidebarMenuItem>
                   <DropdownMenu>
+                    {/* Trigger */}
                     <DropdownMenuTrigger asChild>
                       <SidebarMenuButton>
                         <User2 /> Username
@@ -87,11 +100,38 @@ const Layout = () => {
                       side='top'
                       className='w-[--radix-popper-anchor-width]'
                     >
+                      {/* Label Header */}
+                      <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                      <DropdownMenuSeparator />
+
+                      {/* Dark mode */}
+                      <DropdownMenuSub>
+                        <DropdownMenuSubTrigger>
+                          <Eclipse />
+                          <span>Dark mode</span>
+                        </DropdownMenuSubTrigger>
+                        <DropdownMenuPortal>
+                          <DropdownMenuSubContent>
+                            <DropdownMenuItem onClick={() => setTheme('light')}>
+                              <span>Light</span>
+                            </DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => setTheme('dark')}>
+                              <span>Dark</span>
+                            </DropdownMenuItem>
+                            <DropdownMenuItem
+                              onClick={() => setTheme('system')}
+                            >
+                              <span>System</span>
+                            </DropdownMenuItem>
+                          </DropdownMenuSubContent>
+                        </DropdownMenuPortal>
+                      </DropdownMenuSub>
+
+                      {/* Logout button */}
                       <DropdownMenuItem>
-                        <span>Dark mode</span>
-                      </DropdownMenuItem>
-                      <DropdownMenuItem>
-                        <span>Sign out</span>
+                        <LogOut />
+                        <span>Log out</span>
+                        <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
                       </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
@@ -99,8 +139,8 @@ const Layout = () => {
               </SidebarMenu>
             </SidebarFooter>
           </Sidebar>
-          <main>
-            <div className='md:hidden h-10 w-full fixed'>
+          <main className='mt-10 md:mt-0'>
+            <div className='md:hidden fixed'>
               <SidebarTrigger>
                 <User2 />
               </SidebarTrigger>

@@ -9,23 +9,21 @@ import router from './routes';
 
 const App = () => {
   return (
-    <div className='dark'>
-      <ErrorBoundary FallbackComponent={ErrorFallback}>
-        <QueryClientProvider client={queryClient}>
-          <ThemeProvider defaultTheme='system' storageKey='vite-ui-theme'>
-            <RouterProvider
-              future={{ v7_startTransition: true }}
-              router={router}
-            />
-          </ThemeProvider>
-          <ReactQueryDevtools
-            initialIsOpen={false}
-            buttonPosition='bottom-right'
-            position='right'
+    <ErrorBoundary FallbackComponent={ErrorFallback}>
+      <QueryClientProvider client={queryClient}>
+        <ThemeProvider defaultTheme='system' storageKey='vite-ui-theme'>
+          <RouterProvider
+            future={{ v7_startTransition: true }}
+            router={router}
           />
-        </QueryClientProvider>
-      </ErrorBoundary>
-    </div>
+        </ThemeProvider>
+        <ReactQueryDevtools
+          initialIsOpen={false}
+          buttonPosition='bottom-right'
+          position='right'
+        />
+      </QueryClientProvider>
+    </ErrorBoundary>
   );
 };
 

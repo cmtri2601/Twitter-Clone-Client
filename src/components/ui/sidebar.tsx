@@ -22,6 +22,7 @@ const SIDEBAR_WIDTH = '16rem';
 const SIDEBAR_WIDTH_MOBILE = '18rem';
 const SIDEBAR_WIDTH_ICON = '3rem';
 const SIDEBAR_KEYBOARD_SHORTCUT = 'b';
+const EXIT_KEYBOARD_SHORTCUT = 'q';
 
 type SidebarContext = {
   state: 'expanded' | 'collapsed';
@@ -93,7 +94,7 @@ const SidebarProvider = React.forwardRef<
         : setOpen((open) => !open);
     }, [isMobile, setOpen, setOpenMobile]);
 
-    // Adds a keyboard shortcut to toggle the sidebar.
+    // Adds a keyboard shortcut to toggle the sidebar, exit, ...
     React.useEffect(() => {
       const handleKeyDown = (event: KeyboardEvent) => {
         if (
@@ -102,6 +103,16 @@ const SidebarProvider = React.forwardRef<
         ) {
           event.preventDefault();
           toggleSidebar();
+        }
+
+        // handle exit
+        if (
+          event.key === EXIT_KEYBOARD_SHORTCUT &&
+          (event.metaKey || event.ctrlKey)
+        ) {
+          event.preventDefault();
+          // TODO:
+          console.log('Logout');
         }
       };
 
