@@ -1,18 +1,18 @@
 import { DropdownMenu } from '@radix-ui/react-dropdown-menu';
 import {
   Bell,
-  ChevronUp,
   Eclipse,
+  Ellipsis,
   House,
   LogOut,
   Mail,
   Search,
   Twitter,
-  User2,
   UserRound
 } from 'lucide-react';
 import { NavLink, Outlet } from 'react-router-dom';
 import { useTheme } from '~/components/darkmode/theme-provider';
+import { Avatar, AvatarFallback, AvatarImage } from '~/components/ui/avatar';
 import {
   DropdownMenuContent,
   DropdownMenuItem,
@@ -51,19 +51,19 @@ const Layout = () => {
 
   return (
     <div className='w-screen'>
-      <div className='w-4/6 md:mx-auto'>
+      <div className='w-4/6 sm:mx-auto'>
         <SidebarProvider>
           <Sidebar collapsible={'offcanvas'} variant='inset'>
             {/* Header */}
             <SidebarHeader>
-              <Twitter className='size-7 fill' />
+              <Twitter className='size-10 fill' />
             </SidebarHeader>
 
             {/* Content */}
             <SidebarContent>
               <SidebarMenu>
                 {projects.map((project) => (
-                  <SidebarMenuItem key={project.name}>
+                  <SidebarMenuItem key={project.name} className='py-1'>
                     <NavLink
                       to={project.url}
                       className={({ isActive }) =>
@@ -72,9 +72,9 @@ const Layout = () => {
                         })
                       }
                     >
-                      <SidebarMenuButton asChild size={'lg'} svgSize='size-7'>
+                      <SidebarMenuButton asChild size={'lg'}>
                         <div>
-                          <project.icon className='fill-inherit' />
+                          <project.icon className='fill-inherit' size={27} />
                           <span className='text-xl pl-3'>{project.name}</span>
                         </div>
                       </SidebarMenuButton>
@@ -91,9 +91,19 @@ const Layout = () => {
                   <DropdownMenu>
                     {/* Trigger */}
                     <DropdownMenuTrigger asChild>
-                      <SidebarMenuButton>
-                        <User2 /> Username
-                        <ChevronUp className='ml-auto' />
+                      <SidebarMenuButton className='py-5 flex'>
+                        {/* Avatar */}
+                        <Avatar>
+                          <AvatarImage src='https://github.com/shadcn.png' />
+                          <AvatarFallback>CN</AvatarFallback>
+                        </Avatar>
+                        {/* Name */}
+                        <div className='flex flex-col flex-grow'>
+                          <span className='font-bold'>Shad CN</span>
+                          <span>@shadcn</span>
+                        </div>
+                        {/* Three dots */}
+                        <Ellipsis className='!size-4' />
                       </SidebarMenuButton>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent
@@ -139,10 +149,13 @@ const Layout = () => {
               </SidebarMenu>
             </SidebarFooter>
           </Sidebar>
-          <main className='mt-10 md:mt-0'>
-            <div className='md:hidden fixed'>
+          <main className='mt-10 sm:mt-0'>
+            <div className='sm:hidden fixed'>
               <SidebarTrigger>
-                <User2 />
+                <Avatar>
+                  <AvatarImage src='https://github.com/shadcn.png' />
+                  <AvatarFallback>CN</AvatarFallback>
+                </Avatar>
               </SidebarTrigger>
             </div>
             <Outlet />
