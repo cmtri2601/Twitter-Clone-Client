@@ -51,7 +51,7 @@ const Layout = () => {
 
   return (
     <div className='w-screen'>
-      <div className='w-4/6 sm:mx-auto'>
+      <div className='sm:mx-auto sm:w-full md:w-4/5 lg:w-2/3 xl:w-1/2'>
         <SidebarProvider>
           <Sidebar collapsible={'offcanvas'} variant='inset'>
             {/* Header */}
