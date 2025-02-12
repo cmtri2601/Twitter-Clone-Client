@@ -6,8 +6,8 @@ import {
   FormItem,
   FormLabel,
   FormMessage
-} from '../form';
-import { Input } from '../input';
+} from '../../ui/form';
+import { Input } from '../../ui/input';
 import React from 'react';
 
 type FormRefTextbox<

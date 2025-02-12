@@ -6,10 +6,10 @@ import { z } from 'zod';
 import { ModeToggle } from '~/components/darkmode/mode-toggle';
 import { Button } from '~/components/ui/button';
 import { Form } from '~/components/ui/form';
-import DatePicker from '~/components/ui/Form/DatePicker';
-import Textbox from '~/components/ui/Form/Textbox';
-import H2 from '~/components/ui/Typography/h2';
-import Muted from '~/components/ui/Typography/muted';
+import DatePicker from '~/components/custom/Form/DatePicker';
+import Textbox from '~/components/custom/Form/Textbox';
+import H2 from '~/components/custom/Typography/h2';
+import Muted from '~/components/custom/Typography/muted';
 import { useRegister } from '~/queries/Users';
 
 /**

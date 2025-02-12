@@ -1,5 +1,5 @@
-import H1 from '~/components/ui/Typography/h1';
-import Muted from '~/components/ui/Typography/muted';
+import H1 from '~/components/custom/Typography/h1';
+import Muted from '~/components/custom/Typography/muted';
 
 export default function NotFound() {
   return (
