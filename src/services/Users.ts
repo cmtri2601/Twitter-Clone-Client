@@ -1,6 +1,7 @@
 import { axiosClient } from '~/api/axiosClient';
 import { UserEndpoints } from '~/api/endPoints';
 import { LoginRequest } from '~/dto/users/Login';
+import { LogoutRequest } from '~/dto/users/Logout';
 import { RegisterRequest } from '~/dto/users/Register';
 
 /**
@@ -24,6 +25,15 @@ export default class UserService {
    */
   static async login(data: LoginRequest) {
     const response = await axiosClient.post(UserEndpoints.login(), data);
+    return response.data;
+  }
+
+  /**
+   * Logout the application
+   * @returns Promise with notification that logout success or not
+   */
+  static async logout(data: LogoutRequest) {
+    const response = await axiosClient.post(UserEndpoints.logout(), data);
     return response.data;
   }
 }

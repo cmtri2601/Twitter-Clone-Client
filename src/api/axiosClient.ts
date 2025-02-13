@@ -81,7 +81,7 @@ axiosClient.interceptors.response.use(
       } catch (error) {
         localStorage.removeItem(StorageKey.ACCESS_TOKEN);
         localStorage.removeItem(StorageKey.REFRESH_TOKEN);
-        // TODO: redirect to login
+        window.location.href = '/login';
         return Promise.reject(error);
       }
     }

@@ -1,16 +1,17 @@
 import { Twitter } from 'lucide-react';
 import { Button } from '~/components/ui/button';
-import H2 from '~/components/ui/Typography/h2';
+import H2 from '~/components/custom/Typography/h2';
 import googleLogo from '/imgs/google.svg';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Form } from '~/components/ui/form';
-import Textbox from '~/components/ui/Form/Textbox';
-import { Link } from 'react-router-dom';
-import Muted from '~/components/ui/Typography/muted';
+import Textbox from '~/components/custom/Form/Textbox';
+import { Link, useNavigate } from 'react-router-dom';
+import Muted from '~/components/custom/Typography/muted';
 import { ModeToggle } from '~/components/darkmode/mode-toggle';
 import { useLogin } from '~/queries/Users';
+import { StorageKey } from '~/constants/StorageKey';
 
 /**
  * Define schema
@@ -36,13 +37,18 @@ const Login = () => {
   });
   const { control, handleSubmit } = form;
 
+  // navigate
+  const navigate = useNavigate();
+
   // Mutation hooks
   const login = useLogin();
 
   // Define submit handler
   async function onSubmit(values: LoginType) {
-    console.log(values);
-    await login.mutateAsync(values);
+    const res = await login.mutateAsync(values);
+    localStorage.setItem(StorageKey.ACCESS_TOKEN, res?.data.accessToken);
+    localStorage.setItem(StorageKey.REFRESH_TOKEN, res?.data.refreshToken);
+    navigate('/');
   }
 
   return (

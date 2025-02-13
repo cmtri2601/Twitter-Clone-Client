@@ -11,5 +11,8 @@ export const UserEndpoints = {
   register: () => `/users/register`,
 
   /** Login */
-  login: () => `/users/login`
+  login: () => `/users/login`,
+
+  /** Logout */
+  logout: () => `/users/logout`
 };

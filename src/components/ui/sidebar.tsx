@@ -51,6 +51,7 @@ const SidebarProvider = React.forwardRef<
     defaultOpen?: boolean;
     open?: boolean;
     onOpenChange?: (open: boolean) => void;
+    onExit?: () => void;
   }
 >(
   (
@@ -58,6 +59,7 @@ const SidebarProvider = React.forwardRef<
       defaultOpen = true,
       open: openProp,
       onOpenChange: setOpenProp,
+      onExit,
       className,
       style,
       children,
@@ -111,14 +113,13 @@ const SidebarProvider = React.forwardRef<
           (event.metaKey || event.ctrlKey)
         ) {
           event.preventDefault();
-          // TODO:
-          console.log('Logout');
+          onExit?.();
         }
       };
 
       window.addEventListener('keydown', handleKeyDown);
       return () => window.removeEventListener('keydown', handleKeyDown);
-    }, [toggleSidebar]);
+    }, [toggleSidebar, onExit]);
 
     // We add a state so that we can do data-state="expanded" or "collapsed".
     // This makes it easier to style the sidebar with Tailwind classes.

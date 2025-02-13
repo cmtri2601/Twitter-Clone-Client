@@ -1,4 +1,3 @@
-import { DropdownMenu } from '@radix-ui/react-dropdown-menu';
 import {
   Bell,
   Eclipse,
@@ -10,10 +9,13 @@ import {
   Twitter,
   UserRound
 } from 'lucide-react';
+import { useState } from 'react';
 import { NavLink, Outlet } from 'react-router-dom';
+import AlertDialog from '~/components/custom/AlertDialog';
 import { useTheme } from '~/components/darkmode/theme-provider';
 import { Avatar, AvatarFallback, AvatarImage } from '~/components/ui/avatar';
 import {
+  DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
@@ -36,7 +38,9 @@ import {
   SidebarProvider,
   SidebarTrigger
 } from '~/components/ui/sidebar';
+import { StorageKey } from '~/constants/StorageKey';
 import { cn } from '~/lib/utils';
+import { useLogout } from '~/queries/Users';
 
 const Layout = () => {
   const projects = [
@@ -47,12 +51,33 @@ const Layout = () => {
     { name: 'Profile', url: '/profile', icon: UserRound }
   ];
 
+  // Change mode
   const { setTheme } = useTheme();
+
+  // Logout hook
+  const logout = useLogout();
+
+  // Handle logout
+  const handleLogout = () => {
+    const refreshToken = localStorage.getItem(StorageKey.REFRESH_TOKEN) || '';
+    logout.mutate({ refreshToken });
+  };
+
+  // State control dropdown menu
+  const [openDropdown, setOpenDropdown] = useState(false);
+
+  // State control alert dialog
+  const [openAlertDialog, setOpenAlertDialog] = useState(false);
+
+  // Open alert dialog
+  const showAlertDialog = () => {
+    setOpenAlertDialog(true);
+  };
 
   return (
     <div className='w-screen'>
       <div className='sm:mx-auto sm:w-full md:w-4/5 lg:w-2/3 xl:w-1/2'>
-        <SidebarProvider>
+        <SidebarProvider onExit={showAlertDialog}>
           <Sidebar collapsible={'offcanvas'} variant='inset'>
             {/* Header */}
             <SidebarHeader>
@@ -88,7 +113,10 @@ const Layout = () => {
             <SidebarFooter>
               <SidebarMenu>
                 <SidebarMenuItem>
-                  <DropdownMenu>
+                  <DropdownMenu
+                    open={openDropdown}
+                    onOpenChange={setOpenDropdown}
+                  >
                     {/* Trigger */}
                     <DropdownMenuTrigger asChild>
                       <SidebarMenuButton className='py-5 flex'>
@@ -138,7 +166,13 @@ const Layout = () => {
                       </DropdownMenuSub>
 
                       {/* Logout button */}
-                      <DropdownMenuItem>
+
+                      <DropdownMenuItem
+                        onClick={() => {
+                          setOpenDropdown(false);
+                          showAlertDialog();
+                        }}
+                      >
                         <LogOut />
                         <span>Log out</span>
                         <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
@@ -159,6 +193,15 @@ const Layout = () => {
               </SidebarTrigger>
             </div>
             <Outlet />
+            {/* Alert dialog */}
+            <AlertDialog
+              label='Log out of Twitter?'
+              desc={'You can always log back in at any time.'}
+              continueText='Yes, I want to logout'
+              open={openAlertDialog}
+              setOpen={setOpenAlertDialog}
+              onContinue={handleLogout}
+            />
           </main>
         </SidebarProvider>
       </div>
