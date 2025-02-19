@@ -1,18 +1,18 @@
-import { Twitter } from 'lucide-react';
-import { Button } from '~/components/ui/button';
-import H2 from '~/components/custom/Typography/h2';
-import googleLogo from '/imgs/google.svg';
-import { z } from 'zod';
-import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Form } from '~/components/ui/form';
-import Textbox from '~/components/custom/Form/Textbox';
+import { Twitter } from 'lucide-react';
+import { useForm } from 'react-hook-form';
 import { Link, Navigate, useNavigate } from 'react-router-dom';
+import { z } from 'zod';
+import { useAuth } from '~/components/auth/auth-provider';
+import Textbox from '~/components/custom/Form/Textbox';
+import H2 from '~/components/custom/Typography/h2';
 import Muted from '~/components/custom/Typography/muted';
 import { ModeToggle } from '~/components/darkmode/mode-toggle';
-import { useLogin } from '~/queries/Users';
+import { Button } from '~/components/ui/button';
+import { Form } from '~/components/ui/form';
 import { StorageKey } from '~/constants/StorageKey';
-import { useAuth } from '~/components/auth/auth-provider';
+import { useLogin } from '~/queries/Users';
+import googleLogo from '/imgs/google.svg';
 
 /**
  * Define schema
@@ -121,9 +121,11 @@ const Login = () => {
           </Form>
 
           {/* Forgot password button */}
-          <Button className='mt-2 w-full rounded-3xl' variant={'default'}>
-            Forgot password?
-          </Button>
+          <Link to={'/forgot-password'} className='mt-2 w-full'>
+            <Button className='w-full rounded-3xl' variant={'default'}>
+              Forgot password?
+            </Button>
+          </Link>
 
           {/* Sign up link */}
           <div className='mt-5 w-full flex items-center justify-start'>

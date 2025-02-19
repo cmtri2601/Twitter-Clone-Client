@@ -1,11 +1,13 @@
 import { useMutation, UseMutationResult } from '@tanstack/react-query';
-import { AxiosError, AxiosResponse } from 'axios';
+import { AxiosResponse } from 'axios';
 import { queryKeys } from '~/api/queryKeys';
 import { useAuth } from '~/components/auth/auth-provider';
 import { StorageKey } from '~/constants/StorageKey';
+import { ForgotPasswordRequest } from '~/dto/users/ForgotPassword';
 import { LoginRequest, LoginResponse } from '~/dto/users/Login';
 import { LogoutRequest } from '~/dto/users/Logout';
 import { RegisterRequest, RegisterResponse } from '~/dto/users/Register';
+import { ResetPasswordRequest } from '~/dto/users/ResetPassword';
 import UserService from '~/services/Users';
 
 /**
@@ -49,11 +51,7 @@ export const useLogin = (): UseMutationResult<
  * Hook for logout
  * @returns Mutation result for logout
  */
-export const useLogout = (): UseMutationResult<
-  AxiosError,
-  Error,
-  LogoutRequest
-> => {
+export const useLogout = (): UseMutationResult<null, Error, LogoutRequest> => {
   const { setAuth } = useAuth();
   return useMutation({
     mutationFn: (data: LogoutRequest) => UserService.logout(data),
@@ -65,6 +63,43 @@ export const useLogout = (): UseMutationResult<
     meta: {
       successMessage: 'Logout successfully',
       errorMessage: 'Failed to logout'
+    }
+  });
+};
+
+/**
+ * Hook for forgot password
+ * @returns Mutation result for forgot password
+ */
+export const useForgotPassword = (): UseMutationResult<
+  null,
+  Error,
+  ForgotPasswordRequest
+> => {
+  return useMutation({
+    mutationFn: (data: ForgotPasswordRequest) =>
+      UserService.forgotPassword(data),
+    meta: {
+      successMessage: 'Send email successfully',
+      errorMessage: 'Failed to send email'
+    }
+  });
+};
+
+/**
+ * Hook for reset password
+ * @returns Mutation result for reset password
+ */
+export const useResetPassword = (): UseMutationResult<
+  null,
+  Error,
+  ResetPasswordRequest
+> => {
+  return useMutation({
+    mutationFn: (data: ResetPasswordRequest) => UserService.resetPassword(data),
+    meta: {
+      successMessage: 'Reset password successfully',
+      errorMessage: 'Failed to reset password'
     }
   });
 };

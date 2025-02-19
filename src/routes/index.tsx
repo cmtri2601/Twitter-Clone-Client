@@ -8,11 +8,13 @@ import {
 } from 'react-router-dom';
 import ErrorFallback from '~/pages/ErrorFallback';
 import Explore from '~/pages/Explore';
+import ForgotPassword from '~/pages/ForgotPassword';
 import Layout from '~/pages/Layout';
 import Loading from '~/pages/Loading';
 import Message from '~/pages/Message';
 import NotFound from '~/pages/NotFound';
 import Notification from '~/pages/Notification';
+import ResetPassword from '~/pages/ResetPassword';
 
 const createRouter = () => {
   const Home = lazy(() => import('~/pages/Home'));
@@ -46,6 +48,26 @@ const createRouter = () => {
           element={
             <Suspense fallback={<Loading />}>
               <Login />
+            </Suspense>
+          }
+        />
+
+        {/* Forgot password */}
+        <Route
+          path='/forgot-password'
+          element={
+            <Suspense fallback={<Loading />}>
+              <ForgotPassword />
+            </Suspense>
+          }
+        />
+
+        {/* Reset password */}
+        <Route
+          path='/reset-password'
+          element={
+            <Suspense fallback={<Loading />}>
+              <ResetPassword />
             </Suspense>
           }
         />

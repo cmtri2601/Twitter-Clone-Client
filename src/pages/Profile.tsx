@@ -1,5 +1,13 @@
+import { useAuth } from '~/components/auth/auth-provider';
+
 const Profile = () => {
-  return <div>Profile</div>;
+  const { auth } = useAuth();
+  return (
+    <div className='h-screen'>
+      Profile
+      <p>{JSON.stringify(auth?.user)}</p>
+    </div>
+  );
 };
 
 export default Profile;

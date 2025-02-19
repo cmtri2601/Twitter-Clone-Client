@@ -3,16 +3,16 @@ import { Twitter } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { Link, Navigate, useNavigate } from 'react-router-dom';
 import { z } from 'zod';
-import { ModeToggle } from '~/components/darkmode/mode-toggle';
-import { Button } from '~/components/ui/button';
-import { Form } from '~/components/ui/form';
+import { useAuth } from '~/components/auth/auth-provider';
 import DatePicker from '~/components/custom/Form/DatePicker';
 import Textbox from '~/components/custom/Form/Textbox';
 import H2 from '~/components/custom/Typography/h2';
 import Muted from '~/components/custom/Typography/muted';
-import { useRegister } from '~/queries/Users';
+import { ModeToggle } from '~/components/darkmode/mode-toggle';
+import { Button } from '~/components/ui/button';
+import { Form } from '~/components/ui/form';
 import { StorageKey } from '~/constants/StorageKey';
-import { useAuth } from '~/components/auth/auth-provider';
+import { useRegister } from '~/queries/Users';
 
 /**
  * Define schema

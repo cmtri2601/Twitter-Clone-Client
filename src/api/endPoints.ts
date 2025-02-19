@@ -14,5 +14,11 @@ export const UserEndpoints = {
   login: () => `/users/login`,
 
   /** Logout */
-  logout: () => `/users/logout`
+  logout: () => `/users/logout`,
+
+  /** Forgot password */
+  forgotPassword: () => `/users/forgot-password`,
+
+  /** Reset password */
+  resetPassword: () => `/users/reset-password`
 };
