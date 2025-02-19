@@ -1,3 +1,5 @@
+import { User } from '../common/User';
+
 export interface RegisterRequest {
   email?: string;
   firstName?: string;
@@ -5,4 +7,10 @@ export interface RegisterRequest {
   password?: string;
   confirmPassword?: string;
   dateOfBirth?: string;
+}
+
+export interface RegisterResponse {
+  accessToken: string;
+  refreshToken: string;
+  user: User;
 }

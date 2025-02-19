@@ -1,11 +1,11 @@
 import { useMutation, UseMutationResult } from '@tanstack/react-query';
-import { AxiosError } from 'axios';
+import { AxiosError, AxiosResponse } from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { queryKeys } from '~/api/queryKeys';
 import { StorageKey } from '~/constants/StorageKey';
-import { LoginRequest } from '~/dto/users/Login';
+import { LoginRequest, LoginResponse } from '~/dto/users/Login';
 import { LogoutRequest } from '~/dto/users/Logout';
-import { RegisterRequest } from '~/dto/users/Register';
+import { RegisterRequest, RegisterResponse } from '~/dto/users/Register';
 import UserService from '~/services/Users';
 
 /**
@@ -13,7 +13,7 @@ import UserService from '~/services/Users';
  * @returns Mutation result for new user
  */
 export const useRegister = (): UseMutationResult<
-  AxiosError,
+  AxiosResponse<RegisterResponse>,
   Error,
   RegisterRequest
 > => {
@@ -31,8 +31,11 @@ export const useRegister = (): UseMutationResult<
  * Hook for login
  * @returns Mutation result for login
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const useLogin = (): UseMutationResult<any, Error, LoginRequest> => {
+export const useLogin = (): UseMutationResult<
+  AxiosResponse<LoginResponse>,
+  Error,
+  LoginRequest
+> => {
   return useMutation({
     mutationFn: (data: LoginRequest) => UserService.login(data),
     meta: {

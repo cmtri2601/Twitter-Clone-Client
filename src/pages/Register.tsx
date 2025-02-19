@@ -1,7 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Twitter } from 'lucide-react';
 import { useForm } from 'react-hook-form';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { z } from 'zod';
 import { ModeToggle } from '~/components/darkmode/mode-toggle';
 import { Button } from '~/components/ui/button';
@@ -11,6 +11,7 @@ import Textbox from '~/components/custom/Form/Textbox';
 import H2 from '~/components/custom/Typography/h2';
 import Muted from '~/components/custom/Typography/muted';
 import { useRegister } from '~/queries/Users';
+import { StorageKey } from '~/constants/StorageKey';
 
 /**
  * Define schema
@@ -47,13 +48,22 @@ const Register = () => {
   });
   const { control, handleSubmit } = form;
 
+  // navigate
+  const navigate = useNavigate();
+
   // Mutation hooks
   const register = useRegister();
 
   // Define submit handler
   async function onSubmit(values: RegisterType) {
-    console.log(values);
-    await register.mutateAsync(values);
+    const res = await register.mutateAsync(values);
+    localStorage.setItem(StorageKey.ACCESS_TOKEN, res?.data.accessToken);
+    localStorage.setItem(StorageKey.REFRESH_TOKEN, res?.data.refreshToken);
+    localStorage.setItem(
+      StorageKey.USER,
+      JSON.stringify(res?.data.user.toString())
+    );
+    navigate('/');
   }
 
   return (

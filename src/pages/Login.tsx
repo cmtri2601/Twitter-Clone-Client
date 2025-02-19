@@ -48,6 +48,7 @@ const Login = () => {
     const res = await login.mutateAsync(values);
     localStorage.setItem(StorageKey.ACCESS_TOKEN, res?.data.accessToken);
     localStorage.setItem(StorageKey.REFRESH_TOKEN, res?.data.refreshToken);
+    localStorage.setItem(StorageKey.USER, JSON.stringify(res?.data.user));
     navigate('/');
   }
 

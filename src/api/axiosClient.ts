@@ -6,6 +6,7 @@ import axios, {
 } from 'axios';
 import { HttpStatus } from '~/constants/HttpStatus';
 import { StorageKey } from '~/constants/StorageKey';
+import { UserEndpoints } from './endPoints';
 
 /**
  * Error response interface
@@ -69,18 +70,27 @@ axiosClient.interceptors.response.use(
         );
 
         // Update stored token
-        const { accessToken, refreshToken: newRefreshToken } = response.data;
+        const { accessToken, refreshToken: newRefreshToken } =
+          response.data.data;
         localStorage.setItem(StorageKey.ACCESS_TOKEN, accessToken);
         localStorage.setItem(StorageKey.REFRESH_TOKEN, newRefreshToken);
 
         // Update authorization header
         originalRequest.headers.Authorization = `Bearer ${accessToken}`;
 
+        // Case logout need to change refresh token
+        if ((originalRequest.url = UserEndpoints.logout())) {
+          originalRequest.data = {
+            refreshToken: newRefreshToken
+          };
+        }
+
         // retry original request
         return axiosClient(originalRequest);
       } catch (error) {
         localStorage.removeItem(StorageKey.ACCESS_TOKEN);
         localStorage.removeItem(StorageKey.REFRESH_TOKEN);
+        localStorage.removeItem(StorageKey.USER);
         window.location.href = '/login';
         return Promise.reject(error);
       }

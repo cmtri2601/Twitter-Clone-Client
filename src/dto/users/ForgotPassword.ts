@@ -1,3 +1,3 @@
-export class ForgotPasswordRequest {
+export interface ForgotPasswordRequest {
   email?: string;
 }
