@@ -7,11 +7,12 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Form } from '~/components/ui/form';
 import Textbox from '~/components/custom/Form/Textbox';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, Navigate, useNavigate } from 'react-router-dom';
 import Muted from '~/components/custom/Typography/muted';
 import { ModeToggle } from '~/components/darkmode/mode-toggle';
 import { useLogin } from '~/queries/Users';
 import { StorageKey } from '~/constants/StorageKey';
+import { useAuth } from '~/components/auth/auth-provider';
 
 /**
  * Define schema
@@ -40,6 +41,9 @@ const Login = () => {
   // navigate
   const navigate = useNavigate();
 
+  // Auth
+  const { auth, setAuth } = useAuth();
+
   // Mutation hooks
   const login = useLogin();
 
@@ -48,8 +52,18 @@ const Login = () => {
     const res = await login.mutateAsync(values);
     localStorage.setItem(StorageKey.ACCESS_TOKEN, res?.data.accessToken);
     localStorage.setItem(StorageKey.REFRESH_TOKEN, res?.data.refreshToken);
-    localStorage.setItem(StorageKey.USER, JSON.stringify(res?.data.user));
+
+    // set auth
+    const auth = { user: res?.data.user };
+    setAuth(auth);
+
+    // navigate to home page
     navigate('/');
+  }
+
+  // Don't require auth
+  if (auth?.user) {
+    return <Navigate to='/' />;
   }
 
   return (

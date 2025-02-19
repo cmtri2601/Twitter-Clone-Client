@@ -6,17 +6,20 @@ import queryClient from './api/queryClient';
 import { ThemeProvider } from './components/darkmode/theme-provider';
 import ErrorFallback from './pages/ErrorFallback';
 import router from './routes';
+import { AuthProvider } from './components/auth/auth-provider';
 
 const App = () => {
   return (
     <ErrorBoundary FallbackComponent={ErrorFallback}>
       <QueryClientProvider client={queryClient}>
-        <ThemeProvider defaultTheme='system' storageKey='vite-ui-theme'>
-          <RouterProvider
-            future={{ v7_startTransition: true }}
-            router={router}
-          />
-        </ThemeProvider>
+        <AuthProvider>
+          <ThemeProvider defaultTheme='system' storageKey='vite-ui-theme'>
+            <RouterProvider
+              future={{ v7_startTransition: true }}
+              router={router}
+            />
+          </ThemeProvider>
+        </AuthProvider>
         <ReactQueryDevtools
           initialIsOpen={false}
           buttonPosition='bottom-right'

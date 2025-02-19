@@ -1,7 +1,7 @@
 import { useMutation, UseMutationResult } from '@tanstack/react-query';
 import { AxiosError, AxiosResponse } from 'axios';
-import { useNavigate } from 'react-router-dom';
 import { queryKeys } from '~/api/queryKeys';
+import { useAuth } from '~/components/auth/auth-provider';
 import { StorageKey } from '~/constants/StorageKey';
 import { LoginRequest, LoginResponse } from '~/dto/users/Login';
 import { LogoutRequest } from '~/dto/users/Logout';
@@ -54,13 +54,13 @@ export const useLogout = (): UseMutationResult<
   Error,
   LogoutRequest
 > => {
-  const navigate = useNavigate();
+  const { setAuth } = useAuth();
   return useMutation({
     mutationFn: (data: LogoutRequest) => UserService.logout(data),
     onSuccess: () => {
       localStorage.removeItem(StorageKey.ACCESS_TOKEN);
       localStorage.removeItem(StorageKey.REFRESH_TOKEN);
-      navigate('/login');
+      setAuth({});
     },
     meta: {
       successMessage: 'Logout successfully',

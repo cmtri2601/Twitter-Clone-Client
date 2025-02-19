@@ -10,7 +10,8 @@ import {
   UserRound
 } from 'lucide-react';
 import { useState } from 'react';
-import { NavLink, Outlet } from 'react-router-dom';
+import { Navigate, NavLink, Outlet } from 'react-router-dom';
+import { useAuth } from '~/components/auth/auth-provider';
 import AlertDialog from '~/components/custom/AlertDialog';
 import { useTheme } from '~/components/darkmode/theme-provider';
 import { Avatar, AvatarFallback, AvatarImage } from '~/components/ui/avatar';
@@ -54,6 +55,9 @@ const Layout = () => {
   // Change mode
   const { setTheme } = useTheme();
 
+  // Auth
+  const { auth } = useAuth();
+
   // Logout hook
   const logout = useLogout();
 
@@ -73,6 +77,11 @@ const Layout = () => {
   const showAlertDialog = () => {
     setOpenAlertDialog(true);
   };
+
+  // Require auth
+  if (!auth?.user) {
+    return <Navigate to='/login' />;
+  }
 
   return (
     <div className='w-screen'>
