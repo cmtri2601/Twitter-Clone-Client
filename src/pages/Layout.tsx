@@ -57,6 +57,7 @@ const Layout = () => {
 
   // Auth
   const { auth } = useAuth();
+  const user = auth?.user;
 
   // Logout hook
   const logout = useLogout();
@@ -79,13 +80,13 @@ const Layout = () => {
   };
 
   // Require auth
-  if (!auth?.user) {
+  if (!user) {
     return <Navigate to='/login' />;
   }
 
   return (
     <div className='w-screen'>
-      <div className='sm:mx-auto sm:w-full md:w-4/5 lg:w-2/3 xl:w-1/2'>
+      <div className='sm:mx-auto sm:w-full md:w-4/5 lg:w-2-3 xl:w-7/12'>
         <SidebarProvider onExit={showAlertDialog}>
           <Sidebar collapsible={'offcanvas'} variant='inset'>
             {/* Header */}
@@ -132,12 +133,12 @@ const Layout = () => {
                         {/* Avatar */}
                         <Avatar>
                           <AvatarImage src='https://github.com/shadcn.png' />
-                          <AvatarFallback>CN</AvatarFallback>
+                          <AvatarFallback>{`${user?.firstName?.charAt(0)} ${user?.lastName?.charAt(0)}`}</AvatarFallback>
                         </Avatar>
                         {/* Name */}
                         <div className='flex flex-col flex-grow'>
-                          <span className='font-bold'>Shad CN</span>
-                          <span>@shadcn</span>
+                          <span className='font-bold'>{`${user.firstName} ${user.lastName}`}</span>
+                          <span>{`@${user.username}`}</span>
                         </div>
                         {/* Three dots */}
                         <Ellipsis className='!size-4' />
@@ -192,7 +193,7 @@ const Layout = () => {
               </SidebarMenu>
             </SidebarFooter>
           </Sidebar>
-          <main className='mt-10 sm:mt-0'>
+          <main className='mt-10 sm:mt-0 w-full border-x'>
             <div className='sm:hidden fixed'>
               <SidebarTrigger>
                 <Avatar>

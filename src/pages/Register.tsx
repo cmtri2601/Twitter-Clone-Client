@@ -19,6 +19,7 @@ import { useRegister } from '~/queries/Users';
  */
 const registerSchema = z.object({
   email: z.string().email(),
+  username: z.string().max(40),
   firstName: z.string().max(30),
   lastName: z.string().max(30),
   password: z.string().max(50),
@@ -40,6 +41,7 @@ const Register = () => {
     resolver: zodResolver(registerSchema),
     defaultValues: {
       email: '',
+      username: '',
       firstName: '',
       lastName: '',
       password: '',
@@ -95,6 +97,14 @@ const Register = () => {
             >
               {/* Email */}
               <Textbox control={control} name='email' placeholder='Email' />
+
+              {/* Username */}
+              <Textbox
+                control={control}
+                name='username'
+                placeholder='Username'
+                maxLength={40}
+              />
 
               {/* First name */}
               <Textbox
