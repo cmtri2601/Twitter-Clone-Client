@@ -1,5 +1,5 @@
 import { useAuth } from '~/components/auth/auth-provider';
-import Muted from '~/components/custom/Typography/muted';
+import Muted from '~/components/ui-custom/Typography/muted';
 import { Avatar, AvatarFallback, AvatarImage } from '~/components/ui/avatar';
 import { Button } from '~/components/ui/button';
 import { UserStatus } from '~/constants/UserStatus';

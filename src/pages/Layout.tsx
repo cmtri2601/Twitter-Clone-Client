@@ -12,8 +12,8 @@ import {
 import { useState } from 'react';
 import { Navigate, NavLink, Outlet } from 'react-router-dom';
 import { useAuth } from '~/components/auth/auth-provider';
-import AlertDialog from '~/components/custom/AlertDialog';
-import { useTheme } from '~/components/darkmode/theme-provider';
+import AlertDialog from '~/components/ui-custom/AlertDialog';
+import { useTheme } from '~/components/dark-mode/theme-provider';
 import { Avatar, AvatarFallback, AvatarImage } from '~/components/ui/avatar';
 import {
   DropdownMenu,
@@ -86,7 +86,7 @@ const Layout = () => {
 
   return (
     <div className='w-screen'>
-      <div className='sm:mx-auto sm:w-full md:w-4/5 lg:w-2-3 xl:w-7/12'>
+      <div className='sm:mx-auto sm:w-full md:w-5/6 lg:w-4/5 xl:w-7/12'>
         <SidebarProvider onExit={showAlertDialog}>
           <Sidebar collapsible={'offcanvas'} variant='inset'>
             {/* Header */}

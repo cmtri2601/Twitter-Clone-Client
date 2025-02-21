@@ -1,5 +1,5 @@
-import H1 from '~/components/custom/Typography/h1';
-import Muted from '~/components/custom/Typography/muted';
+import H1 from '~/components/ui-custom/Typography/h1';
+import Muted from '~/components/ui-custom/Typography/muted';
 import { FallbackProps } from 'react-error-boundary';
 import { Button } from '~/components/ui/button';
 
