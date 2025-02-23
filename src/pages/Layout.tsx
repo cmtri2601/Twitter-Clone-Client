@@ -86,7 +86,7 @@ const Layout = () => {
 
   return (
     <div className='w-screen'>
-      <div className='sm:mx-auto sm:w-full md:w-5/6 lg:w-4/5 xl:w-7/12'>
+      <div className='mx-auto w-full min-[550px]:w-5/6 md:w-5/6 lg:w-4/5 min-[1100px]:w-2/3 xl:w-7/12 min-[1500px]:w-1/2 min-[1700px]:w-5/12'>
         <SidebarProvider onExit={showAlertDialog}>
           <Sidebar collapsible={'offcanvas'} variant='inset'>
             {/* Header */}
@@ -193,7 +193,7 @@ const Layout = () => {
               </SidebarMenu>
             </SidebarFooter>
           </Sidebar>
-          <main className='mt-10 sm:mt-0 w-full border-x'>
+          <main className='mt-10 sm:mt-0 w-full sm:border-x'>
             <div className='sm:hidden fixed'>
               <SidebarTrigger>
                 <Avatar>
