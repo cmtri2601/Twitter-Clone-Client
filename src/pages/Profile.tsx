@@ -1,35 +1,18 @@
 import { useAuth } from '~/components/auth/auth-provider';
+import { EditProfileDialog } from '~/components/common/dialog/EditProfileDialog';
 import Post from '~/components/common/Post';
 import Muted from '~/components/ui-custom/Typography/muted';
 import { Avatar, AvatarFallback, AvatarImage } from '~/components/ui/avatar';
 import { Button } from '~/components/ui/button';
 import { Separator } from '~/components/ui/separator';
 import { UserStatus } from '~/constants/UserStatus';
+import { fakePosts } from '~/mock-data/posts';
 
 const Profile = () => {
   const { auth } = useAuth();
   const user = auth?.user;
   const verifyText =
     user?.status === UserStatus.VERIFIED ? 'Get verified' : 'Unverified';
-
-  const fakePosts = [
-    {
-      user: { firstName: 'Tri', lastName: 'Cao', username: 'tri0126210' },
-      content: 'Test nho'
-    },
-    {
-      user: { firstName: 'Tri', lastName: 'Cao', username: 'tri0126210' },
-      content: 'Test nho'
-    },
-    {
-      user: { firstName: 'Tri', lastName: 'Cao', username: 'tri0126210' },
-      content: 'Test nho'
-    },
-    {
-      user: { firstName: 'Tri', lastName: 'Cao', username: 'tri0126210' },
-      content: 'Test nho'
-    }
-  ];
 
   return (
     <div className='w-full'>
@@ -45,9 +28,11 @@ const Profile = () => {
           {/* Username */}
           <div className='w-full'>
             <span className='font-bold mr-3'>{user?.username}</span>
-            <Button className='h-7' variant={'secondary'}>
-              Edit profile
-            </Button>
+            <EditProfileDialog>
+              <Button className='h-7' variant={'secondary'}>
+                Edit profile
+              </Button>
+            </EditProfileDialog>
           </div>
           {/* Post - Followers - Following */}
           <div className='w-full flex items-center justify-between'>
@@ -81,7 +66,7 @@ const Profile = () => {
       {/* Body - Post */}
       <div className='w-full'>
         {fakePosts.map((post) => (
-          <Post {...post} />
+          <Post key={post.user.id} {...post} />
         ))}
       </div>
     </div>

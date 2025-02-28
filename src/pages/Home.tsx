@@ -1,28 +1,10 @@
 import Post from '~/components/common/Post';
+import { fakePosts } from '~/mock-data/posts';
 
 /**
  * Component
  */
 const Home = () => {
-  const fakePosts = [
-    {
-      user: { firstName: 'Tri', lastName: 'Cao', username: 'tri0126210' },
-      content: 'Test nho'
-    },
-    {
-      user: { firstName: 'Tri', lastName: 'Cao', username: 'tri0126210' },
-      content: 'Test nho'
-    },
-    {
-      user: { firstName: 'Tri', lastName: 'Cao', username: 'tri0126210' },
-      content: 'Test nho'
-    },
-    {
-      user: { firstName: 'Tri', lastName: 'Cao', username: 'tri0126210' },
-      content: 'Test nho'
-    }
-  ];
-
   return (
     <div>
       {/* Create post */}
@@ -31,7 +13,7 @@ const Home = () => {
       {/* Posts */}
       <div>
         {fakePosts.map((post) => (
-          <Post {...post} />
+          <Post key={post.user.id} {...post} />
         ))}
       </div>
     </div>

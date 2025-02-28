@@ -28,6 +28,7 @@ type FormDatePicker<
   description?: string;
   isMessage?: boolean;
   outerClass?: string;
+  modal?: boolean;
 } & UseControllerProps<TFieldValues, TName> &
   React.InputHTMLAttributes<HTMLInputElement>;
 
@@ -39,7 +40,8 @@ const DatePicker = <
   name,
   label,
   description,
-  isMessage = true
+  isMessage = true,
+  modal = false
   // ...props
 }: FormDatePicker<TFieldValues, TName>) => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -55,7 +57,7 @@ const DatePicker = <
       render={({ field }) => (
         <FormItem className='flex flex-col'>
           {label && <FormLabel>{label}</FormLabel>}
-          <Popover>
+          <Popover modal={modal}>
             <PopoverTrigger asChild>
               <FormControl>
                 <Button

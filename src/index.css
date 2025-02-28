@@ -86,3 +86,12 @@
     @apply m-3 p-3 bg-orange-200 rounded shadow-stone-400 shadow-md flex flex-col items-center justify-center;
   }
 }
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
