@@ -18,6 +18,7 @@ import {
   DialogTrigger
 } from '~/components/ui/dialog';
 import { Form } from '~/components/ui/form';
+import { MediaType } from '~/constants/MediaType';
 import { Media } from '~/dto/common/Media';
 import { User } from '~/dto/common/User';
 import { useUpdateProfile } from '~/queries/Users';
@@ -59,11 +60,18 @@ export function EditProfileDialog({ user, children }: EditProfileDialogProps) {
     resolver: zodResolver(profileSchema),
     defaultValues: { ...user }
   });
-  const { control, handleSubmit, watch, reset } = form;
+  const { control, handleSubmit, watch, reset, formState } = form;
 
   // set value again when because call api
   useEffect(() => {
-    reset({ ...replaceNull(user) });
+    const formValue = replaceNull(user);
+    reset({
+      ...formValue,
+      avatar: new Media(
+        formValue?.avatar?.url as string,
+        formValue?.avatar?.type as MediaType
+      )
+    });
   }, [user, reset]);
 
   // Mutation hooks
@@ -100,7 +108,11 @@ export function EditProfileDialog({ user, children }: EditProfileDialogProps) {
                   <span className='sr-only'>Close</span>
                 </DialogClose>
                 <DialogTitle className='grow ml-2'>Edit profile</DialogTitle>
-                <Button type='submit' className='rounded-3xl h-8'>
+                <Button
+                  type='submit'
+                  disabled={!formState.isDirty}
+                  className='rounded-3xl h-8'
+                >
                   Save
                 </Button>
               </div>

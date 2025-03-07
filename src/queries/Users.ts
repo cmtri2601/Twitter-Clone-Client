@@ -2,7 +2,6 @@ import {
   useMutation,
   UseMutationResult,
   useQuery,
-  useQueryClient,
   UseQueryResult
 } from '@tanstack/react-query';
 import { AxiosResponse } from 'axios';
@@ -161,15 +160,13 @@ export const useUpdateProfile = (): UseMutationResult<
   Error,
   UpdateMeRequest
 > => {
-  const queryClient = useQueryClient();
+  // const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (data: UpdateMeRequest) => UserService.updateProfile(data),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['user/me'] });
-    },
     meta: {
       successMessage: 'Update successfully',
-      errorMessage: 'Failed to update'
+      errorMessage: 'Failed to update',
+      invalidateQueries: ['user/me']
     }
   });
 };

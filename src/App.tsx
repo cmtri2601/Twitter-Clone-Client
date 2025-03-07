@@ -2,11 +2,12 @@ import { QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { ErrorBoundary } from 'react-error-boundary';
 import { RouterProvider } from 'react-router-dom';
-import queryClient from './api/queryClient';
-import { ThemeProvider } from './components/dark-mode/theme-provider';
-import ErrorFallback from './pages/ErrorFallback';
-import router from './routes';
-import { AuthProvider } from './components/auth/auth-provider';
+import queryClient from '~/api/queryClient';
+import { AuthProvider } from '~/components/auth/auth-provider';
+import { ThemeProvider } from '~/components/dark-mode/theme-provider';
+import { Toaster } from '~/components/ui/sonner';
+import ErrorFallback from '~/pages/ErrorFallback';
+import router from '~/routes';
 
 const App = () => {
   return (
@@ -25,6 +26,7 @@ const App = () => {
           buttonPosition='bottom-right'
           position='right'
         />
+        <Toaster />
       </QueryClientProvider>
     </ErrorBoundary>
   );
