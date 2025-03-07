@@ -22,7 +22,7 @@ const Profile = () => {
       {/* Header */}
       <div className='w-full flex items-center justify-center'>
         {/* Avatar */}
-        <Avatar className='m-3 h-24 w-24 min-[450px]:m-10 md:h-36 md:w-36'>
+        <Avatar className='m-3 h-24 w-24 min-[450px]:mx-10 min-[450px]:my-5 md:h-36 md:w-36'>
           <AvatarImage src={user?.avatar?.url} />
           <AvatarFallback>{`${user?.firstName?.charAt(0)} ${user?.lastName?.charAt(0)}`}</AvatarFallback>
         </Avatar>

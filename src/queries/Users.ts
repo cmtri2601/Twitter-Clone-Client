@@ -133,7 +133,8 @@ export const useResendVerifyEmail = (): UseMutationResult<null, Error> => {
 export const useGetMe = (): UseQueryResult<AxiosResponse<User>> => {
   return useQuery({
     queryKey: [`user/me`],
-    queryFn: () => UserService.getMe()
+    queryFn: () => UserService.getMe(),
+    staleTime: 0
   });
 };
 

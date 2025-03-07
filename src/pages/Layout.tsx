@@ -43,6 +43,7 @@ import { StorageKey } from '~/constants/StorageKey';
 import { cn } from '~/lib/utils';
 import { useLogout } from '~/queries/Users';
 import { UserStatus } from '~/constants/UserStatus';
+import Muted from '~/components/ui-custom/Typography/muted';
 
 const Layout = () => {
   // Change mode
@@ -95,7 +96,9 @@ const Layout = () => {
           <Sidebar collapsible={'offcanvas'} variant='inset'>
             {/* Header */}
             <SidebarHeader>
-              <Twitter className='size-10 fill' />
+              <NavLink to={'/home'}>
+                <Twitter className='size-10 fill' />
+              </NavLink>
             </SidebarHeader>
 
             {/* Content */}
@@ -197,14 +200,29 @@ const Layout = () => {
               </SidebarMenu>
             </SidebarFooter>
           </Sidebar>
-          <main className='mt-10 sm:mt-0 w-full sm:border-x'>
-            <div className='sm:hidden fixed'>
-              <SidebarTrigger>
-                <Avatar>
-                  <AvatarImage src='https://github.com/shadcn.png' />
-                  <AvatarFallback>CN</AvatarFallback>
-                </Avatar>
-              </SidebarTrigger>
+          <main className='mt-14 sm:mt-0 w-full sm:border-x overflow-auto'>
+            {/* Menu in mobile mode */}
+            <div className='sm:hidden fixed top-0 left-0 right-0 z-10 h-14 bg-primary-foreground flex items-center justify-center'>
+              {/* Avatar + sidebar trigger */}
+              <div className='fixed top-0 left-0 px-3 h-14 flex items-center justify-center'>
+                <SidebarTrigger>
+                  <Avatar>
+                    <AvatarImage src={user.avatar?.url} />
+                    <AvatarFallback>{`${user?.firstName?.charAt(0)} ${user?.lastName?.charAt(0)}`}</AvatarFallback>
+                  </Avatar>
+                </SidebarTrigger>
+              </div>
+              {/* Logo */}
+              {/* <div className='flex-grow flex justify-center'> */}
+              <NavLink to={'/home'}>
+                <Twitter className='size-10 fill' />
+              </NavLink>
+              {/* </div> */}
+              {/* Name */}
+              <div className='fixed top-0 right-0 px-3 h-14 flex flex-col items-center justify-center'>
+                <span className='font-bold'>{`${user.firstName} ${user.lastName}`}</span>
+                <Muted>{`@${user.username}`}</Muted>
+              </div>
             </div>
             <Outlet />
             {/* Alert dialog */}

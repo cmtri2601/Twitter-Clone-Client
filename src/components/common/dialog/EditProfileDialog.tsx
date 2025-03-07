@@ -21,6 +21,7 @@ import { Form } from '~/components/ui/form';
 import { Media } from '~/dto/common/Media';
 import { User } from '~/dto/common/User';
 import { useUpdateProfile } from '~/queries/Users';
+import { replaceNull } from '~/utils/replaceNull';
 
 type EditProfileDialogProps = {
   children: ReactNode;
@@ -62,7 +63,7 @@ export function EditProfileDialog({ user, children }: EditProfileDialogProps) {
 
   // set value again when because call api
   useEffect(() => {
-    reset({ ...user });
+    reset({ ...replaceNull(user) });
   }, [user, reset]);
 
   // Mutation hooks
@@ -92,7 +93,7 @@ export function EditProfileDialog({ user, children }: EditProfileDialogProps) {
             onSubmit={handleSubmit(onSubmit)}
             className='space-y-3 overflow-auto p-4 pt-12'
           >
-            <DialogHeader className='fixed top-0 left-0 right-0 z-10 px-3 py-2 bg-gray-50 bg-opacity-95'>
+            <DialogHeader className='fixed top-0 left-0 right-0 z-10 px-3 py-2 bg-primary-foreground bg-opacity-95'>
               <div className='flex items-center justify-center'>
                 <DialogClose className='rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground'>
                   <X className='h-5 w-5' />
@@ -106,12 +107,12 @@ export function EditProfileDialog({ user, children }: EditProfileDialogProps) {
             </DialogHeader>
 
             {/* Avatar */}
-            <div className='bg-zinc-200 rounded-xl p-4 flex items-center justify-center'>
+            <div className=' bg-secondary rounded-xl p-4 flex items-center justify-center'>
               <Avatar className='h-12 w-12 my-0 mx-2'>
                 <AvatarImage src={avtObj?.url || ''} />
                 <AvatarFallback>{`${user?.firstName?.charAt(0)} ${user?.lastName?.charAt(0)}`}</AvatarFallback>
               </Avatar>
-              <span className='grow font-medium'>{user?.username}</span>
+              <span className='grow font-medium'>{`@${user?.username}`}</span>
               <SingleFile
                 control={control}
                 name='avatar'
