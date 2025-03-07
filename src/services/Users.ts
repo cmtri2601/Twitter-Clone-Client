@@ -106,4 +106,24 @@ export default class UserService {
     );
     return response.data;
   }
+
+  /**
+   * Follow
+   * @param data
+   * @returns Promise with notification that follow success or not
+   */
+  static async follow(id: string) {
+    const response = await axiosClient.post(UserEndpoints.follow(id));
+    return response.data;
+  }
+
+  /**
+   * Unfollow
+   * @param data
+   * @returns Promise with notification that follow success or not
+   */
+  static async unfollow(id: string) {
+    const response = await axiosClient.delete(UserEndpoints.unfollow(id));
+    return response.data;
+  }
 }

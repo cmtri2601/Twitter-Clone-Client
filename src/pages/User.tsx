@@ -7,13 +7,25 @@ import { Avatar, AvatarFallback, AvatarImage } from '~/components/ui/avatar';
 import { Button } from '~/components/ui/button';
 import { Separator } from '~/components/ui/separator';
 import { fakePosts } from '~/mock-data/posts';
-import { useGetUser } from '~/queries/Users';
+import { useFollow, useGetUser, useUnfollow } from '~/queries/Users';
 
 const User = () => {
   const { username } = useParams();
   const { auth } = useAuth();
   const res = useGetUser(username);
   const user = res.data?.data;
+
+  // handle follow
+  const follow = useFollow(username);
+  const handleFollow = async () => {
+    await follow.mutateAsync(user?._id);
+  };
+
+  // handle follow
+  const unfollow = useUnfollow(username);
+  const handleUnfollow = async () => {
+    await unfollow.mutateAsync(user?._id);
+  };
 
   // if same user as people login => forward to profile page
   if (auth?.user?.username === username) return <Navigate to={'/profile'} />;
@@ -58,12 +70,23 @@ const User = () => {
           {/* Username */}
           <div className='w-full'>
             <span className='font-bold mr-3'>{`@${user?.username}`}</span>
-            <Button className='h-7' variant={'secondary'}>
-              Follow
-            </Button>
-            <Button className='h-7' variant={'secondary'}>
-              Unfollow
-            </Button>
+            {user.isFollow ? (
+              <Button
+                className='h-7'
+                variant={'secondary'}
+                onClick={handleUnfollow}
+              >
+                Unfollow
+              </Button>
+            ) : (
+              <Button
+                className='h-7'
+                variant={'secondary'}
+                onClick={handleFollow}
+              >
+                Follow
+              </Button>
+            )}
           </div>
           {/* Post - Followers - Following */}
           <div className='w-full flex items-center justify-between'>

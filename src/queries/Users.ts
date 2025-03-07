@@ -131,7 +131,7 @@ export const useResendVerifyEmail = (): UseMutationResult<null, Error> => {
  */
 export const useGetMe = (): UseQueryResult<AxiosResponse<User>> => {
   return useQuery({
-    queryKey: [`user/me`],
+    queryKey: [`users/me`],
     queryFn: () => UserService.getMe(),
     staleTime: 0
   });
@@ -143,9 +143,11 @@ export const useGetMe = (): UseQueryResult<AxiosResponse<User>> => {
  */
 export const useGetUser = (
   username?: string
-): UseQueryResult<AxiosResponse<User>> => {
+): UseQueryResult<
+  AxiosResponse<User & { isFollow?: boolean; isFollowed?: boolean }>
+> => {
   return useQuery({
-    queryKey: [`user/${username}`],
+    queryKey: [`users/${username}`],
     queryFn: () => UserService.getUser(username)
   });
 };
@@ -166,7 +168,56 @@ export const useUpdateProfile = (): UseMutationResult<
     meta: {
       successMessage: 'Update successfully',
       errorMessage: 'Failed to update',
-      invalidateQueries: ['user/me']
+      invalidateQueries: ['users/me']
+    }
+  });
+};
+
+/**
+ * Hook for update profile
+ * @returns Mutation result for login
+ */
+export const useFollow = (
+  username?: string
+): UseMutationResult<
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  AxiosResponse<any>,
+  Error,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  any
+> => {
+  // const queryClient = useQueryClient();
+  console.log('username', username);
+  return useMutation({
+    mutationFn: (id: string) => UserService.follow(id),
+    meta: {
+      successMessage: 'Follow successfully',
+      // errorMessage: 'Fail'
+      invalidateQueries: [`users/${username}`]
+    }
+  });
+};
+
+/**
+ * Hook for update profile
+ * @returns Mutation result for login
+ */
+export const useUnfollow = (
+  username?: string
+): UseMutationResult<
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  AxiosResponse<any>,
+  Error,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  any
+> => {
+  // const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (id: string) => UserService.unfollow(id),
+    meta: {
+      successMessage: 'Unfollow successfully',
+      // errorMessage: 'Fail'
+      invalidateQueries: [`users/${username}`]
     }
   });
 };
