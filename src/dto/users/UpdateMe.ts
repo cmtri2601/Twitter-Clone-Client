@@ -1,3 +1,5 @@
+import { Media } from '~/dto/common/Media';
+
 export interface UpdateMeRequest {
   firstName?: string;
   lastName?: string;
@@ -5,6 +7,6 @@ export interface UpdateMeRequest {
   bio?: string;
   location?: string;
   website?: string;
-  avatar?: string;
+  avatar?: Media;
   coverPhoto?: string;
 }

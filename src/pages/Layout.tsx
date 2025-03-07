@@ -42,16 +42,9 @@ import {
 import { StorageKey } from '~/constants/StorageKey';
 import { cn } from '~/lib/utils';
 import { useLogout } from '~/queries/Users';
+import { UserStatus } from '~/constants/UserStatus';
 
 const Layout = () => {
-  const projects = [
-    { name: 'Home', url: '/home', icon: House },
-    { name: 'Explore', url: '/explore', icon: Search },
-    { name: 'Notification', url: '/notification', icon: Bell },
-    { name: 'Message', url: '/message', icon: Mail },
-    { name: 'Profile', url: '/profile', icon: UserRound }
-  ];
-
   // Change mode
   const { setTheme } = useTheme();
 
@@ -84,6 +77,17 @@ const Layout = () => {
     return <Navigate to='/login' />;
   }
 
+  const menuItems =
+    user.status === UserStatus.VERIFIED
+      ? [
+          { name: 'Home', url: '/home', icon: House },
+          { name: 'Explore', url: '/explore', icon: Search },
+          { name: 'Notification', url: '/notification', icon: Bell },
+          { name: 'Message', url: '/message', icon: Mail },
+          { name: 'Profile', url: '/profile', icon: UserRound }
+        ]
+      : [{ name: 'Profile', url: '/profile', icon: UserRound }];
+
   return (
     <div className='w-screen'>
       <div className='mx-auto w-full min-[550px]:w-5/6 md:w-5/6 lg:w-4/5 min-[1100px]:w-2/3 xl:w-7/12 min-[1500px]:w-1/2 min-[1700px]:w-5/12'>
@@ -97,7 +101,7 @@ const Layout = () => {
             {/* Content */}
             <SidebarContent>
               <SidebarMenu>
-                {projects.map((project) => (
+                {menuItems.map((project) => (
                   <SidebarMenuItem key={project.name} className='py-1'>
                     <NavLink
                       to={project.url}
@@ -132,7 +136,7 @@ const Layout = () => {
                       <SidebarMenuButton className='py-5 flex'>
                         {/* Avatar */}
                         <Avatar>
-                          <AvatarImage src='https://github.com/shadcn.png' />
+                          <AvatarImage src={user?.avatar?.url} />
                           <AvatarFallback>{`${user?.firstName?.charAt(0)} ${user?.lastName?.charAt(0)}`}</AvatarFallback>
                         </Avatar>
                         {/* Name */}

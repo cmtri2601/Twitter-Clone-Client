@@ -1,9 +1,13 @@
+import React, { ReactNode } from 'react';
 import {
   FieldPath,
   FieldValues,
   UseControllerProps,
   UseFormRegisterReturn
 } from 'react-hook-form';
+import { MediaType } from '~/constants/MediaType';
+import { Media } from '~/dto/common/Media';
+import { cn } from '~/lib/utils';
 import {
   FormControl,
   FormDescription,
@@ -13,38 +17,45 @@ import {
   FormMessage
 } from '../../ui/form';
 import { Input } from '../../ui/input';
-import React, { ReactNode } from 'react';
-import { cn } from '~/lib/utils';
 
 type FormTextbox<
   TFieldValues extends FieldValues = FieldValues,
   TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
 > = {
+  fileRef: UseFormRegisterReturn<TName>;
+  type: string;
   label?: string;
   description?: string;
   isMessage?: boolean;
-  fileRef?: UseFormRegisterReturn<TName>;
   children?: ReactNode;
 } & UseControllerProps<TFieldValues, TName> &
   React.InputHTMLAttributes<HTMLInputElement>;
 
-const SingleFileInner = <
+const SingleFile = <
   TFieldValues extends FieldValues = FieldValues,
   TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
->(
-  {
-    control,
-    name,
-    label,
-    description,
-    isMessage = true,
-    fileRef,
-    children,
-    ...props
-  }: FormTextbox<TFieldValues, TName>,
-  ref: React.Ref<HTMLInputElement>
-) => {
+>({
+  control,
+  name,
+  fileRef,
+  type,
+  label,
+  description,
+  isMessage = true,
+  children,
+  ...props
+}: FormTextbox<TFieldValues, TName>) => {
   const id = 'form-single-file-' + name;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const changeHandler = (onChange: (...event: any[]) => void) => (e: any) => {
+    const files = e.target.files;
+    if (files && files[0]) {
+      const newUrl = URL.createObjectURL(new Blob([files[0]], { type }));
+      const file = new Media(newUrl, MediaType.IMAGE, files[0]);
+      onChange({ target: { name, value: file } });
+      // onChange(file); // don't have target ({name, value})
+    }
+  };
   return (
     <FormField
       control={control}
@@ -57,9 +68,9 @@ const SingleFileInner = <
             <Input
               type='file'
               id={id}
-              ref={ref}
               {...fileRef}
               {...props}
+              onChange={changeHandler(fileRef?.onChange)}
               className={cn({ hidden: children }, props.className)}
             />
           </FormControl>
@@ -70,17 +81,5 @@ const SingleFileInner = <
     />
   );
 };
-
-// if use custom ref, need set ref (in react 19, ref as a prop )
-// forwardRef no need to set ref
-// Type assertion (Cast)
-const SingleFile = React.forwardRef(SingleFileInner) as <
-  TFieldValues extends FieldValues = FieldValues,
-  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
->(
-  props: FormTextbox<TFieldValues, TName> & {
-    ref?: React.ForwardedRef<HTMLInputElement>;
-  }
-) => ReturnType<typeof SingleFileInner>;
 
 export default SingleFile;

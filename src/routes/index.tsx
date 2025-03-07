@@ -19,6 +19,7 @@ import ResetPassword from '~/pages/ResetPassword';
 const createRouter = () => {
   const Home = lazy(() => import('~/pages/Home'));
   const Profile = lazy(() => import('~/pages/Profile'));
+  const User = lazy(() => import('~/pages/User'));
   const Login = lazy(() => import('~/pages/Login'));
   const Register = lazy(() => import('~/pages/Register'));
   const TestTailWind = lazy(() => import('~/pages/TestTailWind'));
@@ -133,6 +134,18 @@ const createRouter = () => {
             element={
               <Suspense fallback={<Loading />}>
                 <Profile />
+              </Suspense>
+            }
+            // loader={contactLoader}
+            // action={contactAction}
+          />
+
+          {/* User */}
+          <Route
+            path='user/:username'
+            element={
+              <Suspense fallback={<Loading />}>
+                <User />
               </Suspense>
             }
             // loader={contactLoader}

@@ -1,4 +1,5 @@
 import { UserStatus } from '~/constants/UserStatus';
+import { Media } from '~/dto/common/Media';
 
 export interface User {
   _id?: string;
@@ -19,6 +20,6 @@ export interface User {
   location?: string;
   website?: string;
   dateOfBirth?: string;
-  avatar?: string;
+  avatar?: Media;
   coverPhoto?: string;
 }

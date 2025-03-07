@@ -1,13 +1,21 @@
-import { useMutation, UseMutationResult } from '@tanstack/react-query';
+import {
+  useMutation,
+  UseMutationResult,
+  useQuery,
+  useQueryClient,
+  UseQueryResult
+} from '@tanstack/react-query';
 import { AxiosResponse } from 'axios';
 import { queryKeys } from '~/api/queryKeys';
 import { useAuth } from '~/components/auth/auth-provider';
 import { StorageKey } from '~/constants/StorageKey';
+import { User } from '~/dto/common/User';
 import { ForgotPasswordRequest } from '~/dto/users/ForgotPassword';
 import { LoginRequest, LoginResponse } from '~/dto/users/Login';
 import { LogoutRequest } from '~/dto/users/Logout';
 import { RegisterRequest, RegisterResponse } from '~/dto/users/Register';
 import { ResetPasswordRequest } from '~/dto/users/ResetPassword';
+import { UpdateMeRequest } from '~/dto/users/UpdateMe';
 import UserService from '~/services/Users';
 
 /**
@@ -100,6 +108,67 @@ export const useResetPassword = (): UseMutationResult<
     meta: {
       successMessage: 'Reset password successfully',
       errorMessage: 'Failed to reset password'
+    }
+  });
+};
+
+/**
+ * Hook for resend verify email
+ * @returns Mutation result for resend verify email
+ */
+export const useResendVerifyEmail = (): UseMutationResult<null, Error> => {
+  return useMutation({
+    mutationFn: () => UserService.resendVerifyEmail(),
+    meta: {
+      successMessage: 'Resend verify email successfully',
+      errorMessage: 'Failed to resend verify email'
+    }
+  });
+};
+
+/**
+ * Hook for get login user information
+ * @returns User
+ */
+export const useGetMe = (): UseQueryResult<AxiosResponse<User>> => {
+  return useQuery({
+    queryKey: [`user/me`],
+    queryFn: () => UserService.getMe()
+  });
+};
+
+/**
+ * Hook for get user information
+ * @returns User
+ */
+export const useGetUser = (
+  username?: string
+): UseQueryResult<AxiosResponse<User>> => {
+  return useQuery({
+    queryKey: [`user/${username}`],
+    queryFn: () => UserService.getUser(username)
+  });
+};
+
+/**
+ * Hook for update profile
+ * @returns Mutation result for login
+ */
+export const useUpdateProfile = (): UseMutationResult<
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  AxiosResponse<any>,
+  Error,
+  UpdateMeRequest
+> => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (data: UpdateMeRequest) => UserService.updateProfile(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['user/me'] });
+    },
+    meta: {
+      successMessage: 'Update successfully',
+      errorMessage: 'Failed to update'
     }
   });
 };

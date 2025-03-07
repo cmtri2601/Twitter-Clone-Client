@@ -1,21 +1,49 @@
-import { EditProfileDialog } from '~/components/common/dialog/EditProfileDialog';
+import { Navigate, useParams } from 'react-router-dom';
+import { useAuth } from '~/components/auth/auth-provider';
 import Post from '~/components/common/Post';
+import H2 from '~/components/ui-custom/Typography/h2';
 import Muted from '~/components/ui-custom/Typography/muted';
 import { Avatar, AvatarFallback, AvatarImage } from '~/components/ui/avatar';
 import { Button } from '~/components/ui/button';
 import { Separator } from '~/components/ui/separator';
-import { UserStatus } from '~/constants/UserStatus';
 import { fakePosts } from '~/mock-data/posts';
-import { useGetMe, useResendVerifyEmail } from '~/queries/Users';
+import { useGetUser } from '~/queries/Users';
 
-const Profile = () => {
-  const res = useGetMe();
+const User = () => {
+  const { username } = useParams();
+  const { auth } = useAuth();
+  const res = useGetUser(username);
   const user = res.data?.data;
-  const verifyText =
-    user?.status === UserStatus.VERIFIED ? 'Verified' : 'Unverified';
 
-  // Mutation hooks
-  const resendVerifyEmail = useResendVerifyEmail();
+  // if same user as people login => forward to profile page
+  if (auth?.user?.username === username) return <Navigate to={'/profile'} />;
+
+  // if user does not exist
+  if (!user)
+    return (
+      <div className='w-full'>
+        {/* Header */}
+        <div className='w-full flex items-center justify-center'>
+          {/* Avatar */}
+          <Avatar className='m-3 h-24 w-24 min-[450px]:m-10 md:h-36 md:w-36'>
+            <AvatarImage />
+            <AvatarFallback></AvatarFallback>
+          </Avatar>
+          <div className='my-2 mr-3 min-[450px]:mr-10 flex-grow flex flex-col items-center justify-between'>
+            {/* Username */}
+            <div className='w-full'>
+              <span className='font-bold mr-3'>{`@${username}`}</span>
+            </div>
+          </div>
+        </div>
+
+        <div className='w-full flex flex-col items-center justify-center'>
+          {/* Unverified user */}
+          <H2>This account doesn’t exist</H2>
+          <Muted>Try searching for another.</Muted>
+        </div>
+      </div>
+    );
 
   return (
     <div className='w-full'>
@@ -30,11 +58,12 @@ const Profile = () => {
           {/* Username */}
           <div className='w-full'>
             <span className='font-bold mr-3'>{`@${user?.username}`}</span>
-            <EditProfileDialog user={user}>
-              <Button className='h-7' variant={'secondary'}>
-                Edit profile
-              </Button>
-            </EditProfileDialog>
+            <Button className='h-7' variant={'secondary'}>
+              Follow
+            </Button>
+            <Button className='h-7' variant={'secondary'}>
+              Unfollow
+            </Button>
           </div>
           {/* Post - Followers - Following */}
           <div className='w-full flex items-center justify-between'>
@@ -54,7 +83,6 @@ const Profile = () => {
           {/* Name */}
           <div className='w-full'>
             <span className='font-bold'>{`${user?.firstName} ${user?.lastName}`}</span>
-            <Muted>{verifyText}</Muted>
           </div>
           {/* Bio */}
           <div className='w-full'>
@@ -63,27 +91,16 @@ const Profile = () => {
         </div>
       </div>
 
-      {user?.status === UserStatus.VERIFIED ? (
-        <>
-          <Separator className='my-1' />
-          <div className='w-full'>
-            {/* Body - Post */}
-            {fakePosts.map((post) => (
-              <Post key={post.user.id} {...post} />
-            ))}
-          </div>
-        </>
-      ) : (
-        <div className='w-full flex flex-col items-center justify-center'>
-          {/* Unverified user */}
-          <span>Verify your account to continue using Twitter</span>
-          <Button onClick={() => resendVerifyEmail.mutateAsync(null)}>
-            Click here to resend verify email
-          </Button>
-        </div>
-      )}
+      <Separator className='my-1' />
+
+      {/* Body - Post */}
+      <div className='w-full'>
+        {fakePosts.map((post) => (
+          <Post key={post.user.id} {...post} />
+        ))}
+      </div>
     </div>
   );
 };
 
-export default Profile;
+export default User;

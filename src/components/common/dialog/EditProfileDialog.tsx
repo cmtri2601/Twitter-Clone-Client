@@ -1,8 +1,9 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { X } from 'lucide-react';
-import { ReactNode } from 'react';
+import { ReactNode, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
+import { useAuth } from '~/components/auth/auth-provider';
 import DatePicker from '~/components/ui-custom/Form/DatePicker';
 import SingleFile from '~/components/ui-custom/Form/SingleFile';
 import Textbox from '~/components/ui-custom/Form/Textbox';
@@ -17,10 +18,13 @@ import {
   DialogTrigger
 } from '~/components/ui/dialog';
 import { Form } from '~/components/ui/form';
-import useFilePreview from '~/hooks/useFilePreview';
+import { Media } from '~/dto/common/Media';
+import { User } from '~/dto/common/User';
+import { useUpdateProfile } from '~/queries/Users';
 
 type EditProfileDialogProps = {
   children: ReactNode;
+  user?: User;
 };
 
 /**
@@ -32,7 +36,7 @@ const profileSchema = z.object({
   bio: z.string().max(200),
   location: z.string().max(100),
   website: z.string().max(100),
-  avatar: z.instanceof(FileList),
+  avatar: z.instanceof(Media),
   coverPhoto: z.string().max(200),
   dateOfBirth: z.string()
 });
@@ -42,50 +46,42 @@ const profileSchema = z.object({
  */
 type ProfileType = z.infer<typeof profileSchema>;
 
-export function EditProfileDialog({ children }: EditProfileDialogProps) {
+export function EditProfileDialog({ user, children }: EditProfileDialogProps) {
+  // State of dialog
+  const [open, setOpen] = useState(false);
+
+  // Auth
+  const { setAuth } = useAuth();
+
   // Define form
   const form = useForm<ProfileType>({
     resolver: zodResolver(profileSchema),
-    defaultValues: {
-      firstName: '',
-      lastName: '',
-      bio: '',
-      location: '',
-      website: '',
-      avatar: undefined,
-      coverPhoto: '',
-      dateOfBirth: ''
-    }
+    defaultValues: { ...user }
   });
-  const { control, handleSubmit, watch } = form;
+  const { control, handleSubmit, watch, reset } = form;
+
+  // set value again when because call api
+  useEffect(() => {
+    reset({ ...user });
+  }, [user, reset]);
 
   // Mutation hooks
-  // const register = useRegister();
+  const updateProfile = useUpdateProfile();
 
   // Define submit handler
   async function onSubmit(values: ProfileType) {
-    // const res = await register.mutateAsync(values);
-    console.log(values);
+    console.log('values: ', values);
+    const res = await updateProfile.mutateAsync(values);
+    setAuth({ user: res?.data });
+    setOpen(false);
   }
-
-  // TODO:
-  // mock data
-  const user = {
-    avatar: '',
-    username: 'mtri_c',
-    firstName: 'Tri',
-    lastName: 'Cao'
-  };
 
   // Watch value of avatar
   const fileRef = form.register('avatar');
-  const file = watch('avatar');
-
-  // Convert avatar to blob => preview
-  const [avatar] = useFilePreview(file, 'image/png, image/jpeg');
+  const avtObj = watch('avatar');
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent
         closeButtonCustom={true}
@@ -112,11 +108,16 @@ export function EditProfileDialog({ children }: EditProfileDialogProps) {
             {/* Avatar */}
             <div className='bg-zinc-200 rounded-xl p-4 flex items-center justify-center'>
               <Avatar className='h-12 w-12 my-0 mx-2'>
-                <AvatarImage src={avatar} />
+                <AvatarImage src={avtObj?.url || ''} />
                 <AvatarFallback>{`${user?.firstName?.charAt(0)} ${user?.lastName?.charAt(0)}`}</AvatarFallback>
               </Avatar>
-              <span className='grow font-medium'>{user.username}</span>
-              <SingleFile control={control} name='avatar' fileRef={fileRef}>
+              <span className='grow font-medium'>{user?.username}</span>
+              <SingleFile
+                control={control}
+                name='avatar'
+                fileRef={fileRef}
+                type='image/png, image/jpeg'
+              >
                 <Button asDiv className='rounded-3xl h-8'>
                   Change photo
                 </Button>

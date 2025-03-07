@@ -7,6 +7,8 @@ import axios, {
 import { HttpStatus } from '~/constants/HttpStatus';
 import { StorageKey } from '~/constants/StorageKey';
 import { UserEndpoints } from './endPoints';
+import { Media } from '~/dto/common/Media';
+import { uploadFile } from '~/utils/file';
 
 /**
  * Error response interface
@@ -33,12 +35,31 @@ export const axiosClient: AxiosInstance = (() => {
  * - Handles request configuration
  */
 axiosClient.interceptors.request.use(
-  (config: InternalAxiosRequestConfig): InternalAxiosRequestConfig => {
+  async (
+    config: InternalAxiosRequestConfig
+  ): Promise<InternalAxiosRequestConfig> => {
     // Add token if available
     const token = localStorage.getItem(StorageKey.ACCESS_TOKEN);
     if (token && config.headers) {
       config.headers.Authorization = `Bearer ${token}`;
     }
+
+    /* 
+      Note: config.data in interceptors.request is object,
+      but in interceptors.response is json
+      => just handle send file at request
+     */
+    const body = config.data;
+
+    // Check if the request data includes a file
+    if (typeof body === 'object') {
+      for (const [, value] of Object.entries(body)) {
+        if (value instanceof Media && value.file instanceof File) {
+          await uploadFile(value);
+        }
+      }
+    }
+
     return config;
   },
   (error: AxiosError): Promise<AxiosError> => {
@@ -79,7 +100,7 @@ axiosClient.interceptors.response.use(
         originalRequest.headers.Authorization = `Bearer ${accessToken}`;
 
         // Case logout need to change refresh token
-        if ((originalRequest.url = UserEndpoints.logout())) {
+        if (originalRequest.url === UserEndpoints.logout()) {
           originalRequest.data = {
             refreshToken: newRefreshToken
           };

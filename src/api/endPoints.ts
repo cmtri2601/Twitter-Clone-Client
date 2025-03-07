@@ -20,5 +20,17 @@ export const UserEndpoints = {
   forgotPassword: () => `/users/forgot-password`,
 
   /** Reset password */
-  resetPassword: () => `/users/reset-password`
+  resetPassword: () => `/users/reset-password`,
+
+  /** Reset password */
+  resendVerifyEmail: () => `/users/resend-verify-email`,
+
+  /** Get login user info */
+  getMe: () => `/users/me`,
+
+  /** Get user info */
+  getUser: (username?: string) => `/users/${username}`,
+
+  /** Update profile */
+  updateProfile: () => `/users/me`
 };
