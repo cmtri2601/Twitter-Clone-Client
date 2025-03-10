@@ -3,7 +3,7 @@ import { Twitter } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { Navigate } from 'react-router-dom';
 import { z } from 'zod';
-import { useAuth } from '~/components/auth/auth-provider';
+import { useAuth } from '~/components/auth/Auth';
 import Textbox from '~/components/ui-custom/Form/Textbox';
 import H2 from '~/components/ui-custom/Typography/h2';
 import Muted from '~/components/ui-custom/Typography/muted';
@@ -33,7 +33,9 @@ const ForgotPassword = () => {
   const { control, handleSubmit } = form;
 
   // Auth
-  const { auth } = useAuth();
+  const {
+    auth: { isLogin }
+  } = useAuth();
 
   // Mutation hooks
   const forgotPassword = useForgotPassword();
@@ -44,7 +46,7 @@ const ForgotPassword = () => {
   }
 
   // Don't require auth
-  if (auth?.user) {
+  if (isLogin) {
     return <Navigate to='/' />;
   }
 

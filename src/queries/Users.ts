@@ -6,7 +6,7 @@ import {
 } from '@tanstack/react-query';
 import { AxiosResponse } from 'axios';
 import { queryKeys } from '~/api/queryKeys';
-import { useAuth } from '~/components/auth/auth-provider';
+import { useAuth } from '~/components/auth/Auth';
 import { StorageKey } from '~/constants/StorageKey';
 import { User } from '~/dto/common/User';
 import { ForgotPasswordRequest } from '~/dto/users/ForgotPassword';
@@ -59,13 +59,14 @@ export const useLogin = (): UseMutationResult<
  * @returns Mutation result for logout
  */
 export const useLogout = (): UseMutationResult<null, Error, LogoutRequest> => {
-  const { setAuth } = useAuth();
+  const { unauthenticate } = useAuth();
   return useMutation({
-    mutationFn: (data: LogoutRequest) => UserService.logout(data),
+    mutationFn: () =>
+      UserService.logout({
+        refreshToken: localStorage.getItem(StorageKey.REFRESH_TOKEN) as string
+      }),
     onSuccess: () => {
-      localStorage.removeItem(StorageKey.ACCESS_TOKEN);
-      localStorage.removeItem(StorageKey.REFRESH_TOKEN);
-      setAuth({});
+      unauthenticate();
     },
     meta: {
       successMessage: 'Logout successfully',
@@ -129,11 +130,23 @@ export const useResendVerifyEmail = (): UseMutationResult<null, Error> => {
  * Hook for get login user information
  * @returns User
  */
-export const useGetMe = (): UseQueryResult<AxiosResponse<User>> => {
+export const useGetMe = ({
+  enabled = true
+}: {
+  enabled?: boolean;
+}): UseQueryResult<AxiosResponse<User>> => {
   return useQuery({
     queryKey: [`users/me`],
     queryFn: () => UserService.getMe(),
-    staleTime: 0
+    staleTime: Infinity,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+    refetchInterval: 0,
+    retry: false,
+    enabled,
+    refetchIntervalInBackground: false,
+    retryOnMount: false
   });
 };
 
@@ -157,18 +170,19 @@ export const useGetUser = (
  * @returns Mutation result for login
  */
 export const useUpdateProfile = (): UseMutationResult<
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  AxiosResponse<any>,
+  AxiosResponse<{ data: User }>,
   Error,
   UpdateMeRequest
 > => {
-  // const queryClient = useQueryClient();
+  const { updateUser } = useAuth();
   return useMutation({
     mutationFn: (data: UpdateMeRequest) => UserService.updateProfile(data),
+    onSuccess(res) {
+      updateUser(res.data);
+    },
     meta: {
       successMessage: 'Update successfully',
-      errorMessage: 'Failed to update',
-      invalidateQueries: ['users/me']
+      errorMessage: 'Failed to update'
     }
   });
 };
@@ -179,17 +193,11 @@ export const useUpdateProfile = (): UseMutationResult<
  */
 export const useFollow = (
   username?: string
-): UseMutationResult<
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  AxiosResponse<any>,
-  Error,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  any
-> => {
+): UseMutationResult<AxiosResponse<null>, Error, string | undefined> => {
   // const queryClient = useQueryClient();
   console.log('username', username);
   return useMutation({
-    mutationFn: (id: string) => UserService.follow(id),
+    mutationFn: (id?: string) => UserService.follow(id),
     meta: {
       successMessage: 'Follow successfully',
       // errorMessage: 'Fail'
@@ -204,16 +212,10 @@ export const useFollow = (
  */
 export const useUnfollow = (
   username?: string
-): UseMutationResult<
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  AxiosResponse<any>,
-  Error,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  any
-> => {
+): UseMutationResult<AxiosResponse<null>, Error, string | undefined> => {
   // const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (id: string) => UserService.unfollow(id),
+    mutationFn: (id?: string) => UserService.unfollow(id),
     meta: {
       successMessage: 'Unfollow successfully',
       // errorMessage: 'Fail'

@@ -3,9 +3,11 @@ import { ErrorBoundary } from 'react-error-boundary';
 import {
   createBrowserRouter,
   createRoutesFromElements,
+  NavigateFunction,
   Outlet,
   Route
 } from 'react-router-dom';
+import { AuthProvider } from '~/components/auth/Auth';
 import ErrorFallback from '~/pages/ErrorFallback';
 import Explore from '~/pages/Explore';
 import ForgotPassword from '~/pages/ForgotPassword';
@@ -25,12 +27,16 @@ const createRouter = () => {
   const Register = lazy(() => import('~/pages/Register'));
   const TestTailWind = lazy(() => import('~/pages/TestTailWind'));
 
+  // Error boundary
   const ErrorBoundaryLayout = () => (
     <ErrorBoundary FallbackComponent={ErrorFallback}>
-      <Outlet />
+      <AuthProvider>
+        <Outlet />
+      </AuthProvider>
     </ErrorBoundary>
   );
 
+  // Route
   return createBrowserRouter(
     createRoutesFromElements(
       <Route path='/' element={<ErrorBoundaryLayout />}>
@@ -187,6 +193,15 @@ const createRouter = () => {
   );
 };
 
+// Create router
 const router = createRouter();
+
+// Define global router for navigation in axios client
+const globalRouter = { navigate: null, logout: null } as {
+  navigate: null | NavigateFunction;
+  logout: null | (() => void);
+};
+
+export { globalRouter };
 
 export default router;

@@ -1,17 +1,17 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Twitter } from 'lucide-react';
 import { useForm } from 'react-hook-form';
-import { Link, Navigate, useNavigate } from 'react-router-dom';
+import { Link, Navigate } from 'react-router-dom';
 import { z } from 'zod';
-import { useAuth } from '~/components/auth/auth-provider';
+import { useAuth } from '~/components/auth/Auth';
+import { ModeToggle } from '~/components/dark-mode/mode-toggle';
 import DatePicker from '~/components/ui-custom/Form/DatePicker';
 import Textbox from '~/components/ui-custom/Form/Textbox';
 import H2 from '~/components/ui-custom/Typography/h2';
 import Muted from '~/components/ui-custom/Typography/muted';
-import { ModeToggle } from '~/components/dark-mode/mode-toggle';
 import { Button } from '~/components/ui/button';
 import { Form } from '~/components/ui/form';
-import { StorageKey } from '~/constants/StorageKey';
+import { RegisterResponse } from '~/dto/users/Register';
 import { useRegister } from '~/queries/Users';
 
 /**
@@ -51,11 +51,11 @@ const Register = () => {
   });
   const { control, handleSubmit } = form;
 
-  // navigate
-  const navigate = useNavigate();
-
   // Auth
-  const { auth, setAuth } = useAuth();
+  const {
+    auth: { isLogin },
+    authenticate
+  } = useAuth();
 
   // Mutation hooks
   const register = useRegister();
@@ -63,19 +63,12 @@ const Register = () => {
   // Define submit handler
   async function onSubmit(values: RegisterType) {
     const res = await register.mutateAsync(values);
-    localStorage.setItem(StorageKey.ACCESS_TOKEN, res?.data.accessToken);
-    localStorage.setItem(StorageKey.REFRESH_TOKEN, res?.data.refreshToken);
-
-    // set auth
-    const auth = { user: res?.data.user };
-    setAuth(auth);
-
-    // navigate to home page
-    navigate('/');
+    const { accessToken, refreshToken, user } = res.data as RegisterResponse;
+    authenticate(accessToken, refreshToken, user);
   }
 
   // Don't require auth
-  if (auth?.user) {
+  if (isLogin) {
     return <Navigate to='/' />;
   }
 

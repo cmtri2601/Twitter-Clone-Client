@@ -35,8 +35,8 @@ export const UserEndpoints = {
   updateProfile: () => `/users/me`,
 
   /** Follow */
-  follow: (id: string) => `/users/${id}/follow`,
+  follow: (id?: string) => `/users/${id}/follow`,
 
   /** Follow */
-  unfollow: (id: string) => `/users/${id}/unfollow`
+  unfollow: (id?: string) => `/users/${id}/unfollow`
 };

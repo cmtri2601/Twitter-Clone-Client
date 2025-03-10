@@ -11,7 +11,7 @@ import {
 } from 'lucide-react';
 import { useState } from 'react';
 import { Navigate, NavLink, Outlet } from 'react-router-dom';
-import { useAuth } from '~/components/auth/auth-provider';
+import { useAuth } from '~/components/auth/Auth';
 import { Username } from '~/components/common/Username';
 import { useTheme } from '~/components/dark-mode/theme-provider';
 import AlertDialog from '~/components/ui-custom/AlertDialog';
@@ -40,7 +40,6 @@ import {
   SidebarProvider,
   SidebarTrigger
 } from '~/components/ui/sidebar';
-import { StorageKey } from '~/constants/StorageKey';
 import { UserStatus } from '~/constants/UserStatus';
 import { cn } from '~/lib/utils';
 import { useLogout } from '~/queries/Users';
@@ -50,16 +49,16 @@ const Layout = () => {
   const { setTheme } = useTheme();
 
   // Auth
-  const { auth } = useAuth();
-  const user = auth?.user;
+  const {
+    auth: { isLogin, user }
+  } = useAuth();
 
   // Logout hook
   const logout = useLogout();
 
   // Handle logout
-  const handleLogout = () => {
-    const refreshToken = localStorage.getItem(StorageKey.REFRESH_TOKEN) || '';
-    logout.mutate({ refreshToken });
+  const handleLogout = async () => {
+    await logout.mutateAsync({});
   };
 
   // State control dropdown menu
@@ -74,12 +73,12 @@ const Layout = () => {
   };
 
   // Require auth
-  if (!user) {
+  if (!isLogin) {
     return <Navigate to='/login' />;
   }
 
   const menuItems =
-    user.status === UserStatus.VERIFIED
+    user?.status === UserStatus.VERIFIED
       ? [
           { name: 'Home', url: '/home', icon: House },
           { name: 'Explore', url: '/explore', icon: Search },
@@ -144,7 +143,7 @@ const Layout = () => {
                         </Avatar>
                         {/* Name */}
                         <div className='flex flex-col flex-grow'>
-                          <span className='font-bold'>{`${user.firstName} ${user.lastName}`}</span>
+                          <span className='font-bold'>{`${user?.firstName} ${user?.lastName}`}</span>
                           <Username
                             username={user?.username as string}
                             className='text-sm text-muted-foreground'
@@ -210,7 +209,7 @@ const Layout = () => {
               <div className='fixed top-0 left-0 px-3 h-14 flex items-center justify-center'>
                 <SidebarTrigger>
                   <Avatar>
-                    <AvatarImage src={user.avatar?.url} />
+                    <AvatarImage src={user?.avatar?.url} />
                     <AvatarFallback>{`${user?.firstName?.charAt(0)} ${user?.lastName?.charAt(0)}`}</AvatarFallback>
                   </Avatar>
                 </SidebarTrigger>
@@ -223,7 +222,7 @@ const Layout = () => {
               {/* </div> */}
               {/* Name */}
               <div className='fixed top-0 right-0 px-3 h-14 flex flex-col items-center justify-center'>
-                <span className='font-bold'>{`${user.firstName} ${user.lastName}`}</span>
+                <span className='font-bold'>{`${user?.firstName} ${user?.lastName}`}</span>
                 <Username
                   username={user?.username as string}
                   className='text-sm text-muted-foreground'

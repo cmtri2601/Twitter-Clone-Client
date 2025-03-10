@@ -9,6 +9,7 @@ import { StorageKey } from '~/constants/StorageKey';
 import { UserEndpoints } from './endPoints';
 import { Media } from '~/dto/common/Media';
 import { uploadFile } from '~/utils/file';
+import { globalRouter } from '~/routes';
 
 /**
  * Error response interface
@@ -111,8 +112,9 @@ axiosClient.interceptors.response.use(
       } catch (error) {
         localStorage.removeItem(StorageKey.ACCESS_TOKEN);
         localStorage.removeItem(StorageKey.REFRESH_TOKEN);
-        localStorage.removeItem(StorageKey.USER);
-        window.location.href = '/login';
+        if (globalRouter.logout) {
+          globalRouter.logout();
+        }
         return Promise.reject(error);
       }
     }

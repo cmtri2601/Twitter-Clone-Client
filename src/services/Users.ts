@@ -112,7 +112,7 @@ export default class UserService {
    * @param data
    * @returns Promise with notification that follow success or not
    */
-  static async follow(id: string) {
+  static async follow(id?: string) {
     const response = await axiosClient.post(UserEndpoints.follow(id));
     return response.data;
   }
@@ -122,7 +122,7 @@ export default class UserService {
    * @param data
    * @returns Promise with notification that follow success or not
    */
-  static async unfollow(id: string) {
+  static async unfollow(id?: string) {
     const response = await axiosClient.delete(UserEndpoints.unfollow(id));
     return response.data;
   }

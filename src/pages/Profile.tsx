@@ -1,3 +1,4 @@
+import { useAuth } from '~/components/auth/Auth';
 import { EditProfileDialog } from '~/components/common/dialog/EditProfileDialog';
 import Post from '~/components/common/Post';
 import Muted from '~/components/ui-custom/Typography/muted';
@@ -6,11 +7,14 @@ import { Button } from '~/components/ui/button';
 import { Separator } from '~/components/ui/separator';
 import { UserStatus } from '~/constants/UserStatus';
 import { fakePosts } from '~/mock-data/posts';
-import { useGetMe, useResendVerifyEmail } from '~/queries/Users';
+import { useResendVerifyEmail } from '~/queries/Users';
 
 const Profile = () => {
-  const res = useGetMe();
-  const user = res.data?.data;
+  const {
+    auth: { user }
+  } = useAuth();
+
+  // Verify text
   const verifyText =
     user?.status === UserStatus.VERIFIED ? 'Verified' : 'Unverified';
 

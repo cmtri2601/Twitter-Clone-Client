@@ -1,5 +1,5 @@
 import { Navigate, useParams } from 'react-router-dom';
-import { useAuth } from '~/components/auth/auth-provider';
+import { useAuth } from '~/components/auth/Auth';
 import Post from '~/components/common/Post';
 import H2 from '~/components/ui-custom/Typography/h2';
 import Muted from '~/components/ui-custom/Typography/muted';
@@ -11,26 +11,30 @@ import { useFollow, useGetUser, useUnfollow } from '~/queries/Users';
 
 const User = () => {
   const { username } = useParams();
-  const { auth } = useAuth();
+  const {
+    auth: { user: ownUser }
+  } = useAuth();
+
+  // Get profile of user
   const res = useGetUser(username);
   const user = res.data?.data;
 
-  // handle follow
+  // Handle follow
   const follow = useFollow(username);
   const handleFollow = async () => {
     await follow.mutateAsync(user?._id);
   };
 
-  // handle follow
+  // Handle follow
   const unfollow = useUnfollow(username);
   const handleUnfollow = async () => {
     await unfollow.mutateAsync(user?._id);
   };
 
-  // if same user as people login => forward to profile page
-  if (auth?.user?.username === username) return <Navigate to={'/profile'} />;
+  // If same user as people login => forward to profile page
+  if (ownUser?.username === username) return <Navigate to={'/profile'} />;
 
-  // if user does not exist
+  // If user does not exist
   if (!user)
     return (
       <div className='w-full'>

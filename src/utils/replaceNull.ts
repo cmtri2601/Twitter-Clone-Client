@@ -1,7 +1,7 @@
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function replaceNull<T extends Record<string, any>>(
-  obj?: T
-): T | undefined {
+  obj?: T | null
+): T | undefined | null {
   if (!obj) {
     return obj;
   }

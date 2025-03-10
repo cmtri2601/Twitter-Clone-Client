@@ -3,7 +3,6 @@ import { X } from 'lucide-react';
 import { ReactNode, useCallback, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
-import { useAuth } from '~/components/auth/auth-provider';
 import DatePicker from '~/components/ui-custom/Form/DatePicker';
 import SingleFile from '~/components/ui-custom/Form/SingleFile';
 import Textbox from '~/components/ui-custom/Form/Textbox';
@@ -53,9 +52,6 @@ export function EditProfileDialog({ user, children }: EditProfileDialogProps) {
   // State of dialog
   const [open, setOpen] = useState(false);
 
-  // Auth
-  const { setAuth } = useAuth();
-
   // Define form
   const form = useForm<ProfileType>({
     resolver: zodResolver(profileSchema),
@@ -95,9 +91,7 @@ export function EditProfileDialog({ user, children }: EditProfileDialogProps) {
 
   // Define submit handler
   async function onSubmit(values: ProfileType) {
-    console.log('values: ', values);
-    const res = await updateProfile.mutateAsync(values);
-    setAuth({ user: res?.data });
+    await updateProfile.mutateAsync(values);
     setOpen(false);
   }
 

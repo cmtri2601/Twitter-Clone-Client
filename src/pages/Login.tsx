@@ -1,19 +1,19 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Twitter } from 'lucide-react';
 import { useForm } from 'react-hook-form';
-import { Link, Navigate, useNavigate } from 'react-router-dom';
+import { Link, Navigate } from 'react-router-dom';
 import { z } from 'zod';
-import { useAuth } from '~/components/auth/auth-provider';
+import { useAuth } from '~/components/auth/Auth';
+import { ModeToggle } from '~/components/dark-mode/mode-toggle';
 import Textbox from '~/components/ui-custom/Form/Textbox';
 import H2 from '~/components/ui-custom/Typography/h2';
 import Muted from '~/components/ui-custom/Typography/muted';
-import { ModeToggle } from '~/components/dark-mode/mode-toggle';
 import { Button } from '~/components/ui/button';
 import { Form } from '~/components/ui/form';
-import { StorageKey } from '~/constants/StorageKey';
+import { LoginResponse } from '~/dto/users/Login';
 import { useLogin } from '~/queries/Users';
-import googleLogo from '/imgs/google.svg';
 import { oathGoogleUrl } from '~/utils/oauth';
+import googleLogo from '/imgs/google.svg';
 
 /**
  * Define schema
@@ -39,11 +39,11 @@ const Login = () => {
   });
   const { control, handleSubmit } = form;
 
-  // navigate
-  const navigate = useNavigate();
-
   // Auth
-  const { auth, setAuth } = useAuth();
+  const {
+    auth: { isLogin },
+    authenticate
+  } = useAuth();
 
   // Mutation hooks
   const login = useLogin();
@@ -51,15 +51,8 @@ const Login = () => {
   // Define submit handler
   async function onSubmit(values: LoginType) {
     const res = await login.mutateAsync(values);
-    localStorage.setItem(StorageKey.ACCESS_TOKEN, res?.data.accessToken);
-    localStorage.setItem(StorageKey.REFRESH_TOKEN, res?.data.refreshToken);
-
-    // set auth
-    const auth = { user: res?.data.user };
-    setAuth(auth);
-
-    // navigate to home page
-    navigate('/');
+    const { accessToken, refreshToken, user } = res.data as LoginResponse;
+    authenticate(accessToken, refreshToken, user);
   }
 
   // Handle login with google oauth
@@ -68,7 +61,7 @@ const Login = () => {
   }
 
   // Don't require auth
-  if (auth?.user) {
+  if (isLogin) {
     return <Navigate to='/' />;
   }
 
