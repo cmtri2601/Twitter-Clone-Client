@@ -13,6 +13,7 @@ import { Form } from '~/components/ui/form';
 import { StorageKey } from '~/constants/StorageKey';
 import { useLogin } from '~/queries/Users';
 import googleLogo from '/imgs/google.svg';
+import { oathGoogleUrl } from '~/utils/oauth';
 
 /**
  * Define schema
@@ -61,6 +62,11 @@ const Login = () => {
     navigate('/');
   }
 
+  // Handle login with google oauth
+  function onGoogle() {
+    window.location.href = oathGoogleUrl;
+  }
+
   // Don't require auth
   if (auth?.user) {
     return <Navigate to='/' />;
@@ -77,7 +83,11 @@ const Login = () => {
           <H2 className='mt-2 dark:text-white'>Login to Twitter</H2>
 
           {/* Login with vendor */}
-          <Button className='mt-2 w-full rounded-3xl' variant={'outline'}>
+          <Button
+            onClick={onGoogle}
+            className='mt-2 w-full rounded-3xl'
+            variant={'outline'}
+          >
             <img src={googleLogo} alt='Google logo' className='h-6' />
             Login with Google
           </Button>

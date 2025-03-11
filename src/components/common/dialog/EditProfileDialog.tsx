@@ -1,6 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { X } from 'lucide-react';
-import { ReactNode, useEffect, useState } from 'react';
+import { ReactNode, useCallback, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { useAuth } from '~/components/auth/auth-provider';
@@ -23,6 +23,7 @@ import { Media } from '~/dto/common/Media';
 import { User } from '~/dto/common/User';
 import { useUpdateProfile } from '~/queries/Users';
 import { replaceNull } from '~/utils/replaceNull';
+import { Username } from '../Username';
 
 type EditProfileDialogProps = {
   children: ReactNode;
@@ -62,8 +63,8 @@ export function EditProfileDialog({ user, children }: EditProfileDialogProps) {
   });
   const { control, handleSubmit, watch, reset, formState } = form;
 
-  // set value again when because call api
-  useEffect(() => {
+  // Reset form value
+  const resetFormValue = useCallback(() => {
     const formValue = replaceNull(user);
     reset({
       ...formValue,
@@ -73,6 +74,21 @@ export function EditProfileDialog({ user, children }: EditProfileDialogProps) {
       )
     });
   }, [user, reset]);
+
+  // Handle toggle dialog
+  const toggleDialog = () => {
+    if (open) {
+      resetFormValue();
+      setOpen((open) => !open);
+    } else {
+      setOpen((open) => !open);
+    }
+  };
+
+  // set value again when because call api
+  useEffect(() => {
+    resetFormValue();
+  }, [resetFormValue]);
 
   // Mutation hooks
   const updateProfile = useUpdateProfile();
@@ -90,7 +106,7 @@ export function EditProfileDialog({ user, children }: EditProfileDialogProps) {
   const avtObj = watch('avatar');
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={open} onOpenChange={toggleDialog}>
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent
         closeButtonCustom={true}
@@ -124,7 +140,10 @@ export function EditProfileDialog({ user, children }: EditProfileDialogProps) {
                 <AvatarImage src={avtObj?.url || ''} />
                 <AvatarFallback>{`${user?.firstName?.charAt(0)} ${user?.lastName?.charAt(0)}`}</AvatarFallback>
               </Avatar>
-              <span className='grow font-medium'>{`@${user?.username}`}</span>
+              <Username
+                className='grow font-medium'
+                username={user?.username as string}
+              />
               <SingleFile
                 control={control}
                 name='avatar'

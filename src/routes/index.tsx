@@ -21,6 +21,7 @@ const createRouter = () => {
   const Profile = lazy(() => import('~/pages/Profile'));
   const User = lazy(() => import('~/pages/User'));
   const Login = lazy(() => import('~/pages/Login'));
+  const OAuth = lazy(() => import('~/pages/OAuth'));
   const Register = lazy(() => import('~/pages/Register'));
   const TestTailWind = lazy(() => import('~/pages/TestTailWind'));
 
@@ -49,6 +50,16 @@ const createRouter = () => {
           element={
             <Suspense fallback={<Loading />}>
               <Login />
+            </Suspense>
+          }
+        />
+
+        {/* Login with oauth */}
+        <Route
+          path='/oauth/:resourceServer'
+          element={
+            <Suspense fallback={<Loading />}>
+              <OAuth />
             </Suspense>
           }
         />
