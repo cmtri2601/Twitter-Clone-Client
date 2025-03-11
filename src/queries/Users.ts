@@ -9,6 +9,7 @@ import { queryKeys } from '~/api/queryKeys';
 import { useAuth } from '~/components/auth/Auth';
 import { StorageKey } from '~/constants/StorageKey';
 import { User } from '~/dto/common/User';
+import { ChangePasswordRequest } from '~/dto/users/ChangePassword';
 import { ForgotPasswordRequest } from '~/dto/users/ForgotPassword';
 import { LoginRequest, LoginResponse } from '~/dto/users/Login';
 import { LogoutRequest } from '~/dto/users/Logout';
@@ -30,7 +31,7 @@ export const useRegister = (): UseMutationResult<
     mutationFn: (data: RegisterRequest) => UserService.register(data),
     meta: {
       successMessage: 'Register successfully',
-      errorMessage: 'Failed to register',
+      // errorMessage: 'Failed to register',
       invalidateQueries: queryKeys.users.all
     }
   });
@@ -48,8 +49,8 @@ export const useLogin = (): UseMutationResult<
   return useMutation({
     mutationFn: (data: LoginRequest) => UserService.login(data),
     meta: {
-      successMessage: 'Login successfully',
-      errorMessage: 'Failed to login'
+      successMessage: 'Login successfully'
+      // errorMessage: 'Failed to login'
     }
   });
 };
@@ -155,7 +156,7 @@ export const useGetUser = (
 
 /**
  * Hook for update profile
- * @returns Mutation result for login
+ * @returns Mutation result for update profile
  */
 export const useUpdateProfile = (): UseMutationResult<
   AxiosResponse<{ data: User }>,
@@ -169,15 +170,34 @@ export const useUpdateProfile = (): UseMutationResult<
       updateUser(res.data);
     },
     meta: {
-      successMessage: 'Update successfully',
-      errorMessage: 'Failed to update'
+      successMessage: 'Update your profile successfully',
+      errorMessage: 'Cannot update your profile'
     }
   });
 };
 
 /**
- * Hook for update profile
- * @returns Mutation result for login
+ * Hook for change password
+ * @returns Mutation result for change password
+ */
+export const useChangePassword = (): UseMutationResult<
+  AxiosResponse<null>,
+  Error,
+  ChangePasswordRequest
+> => {
+  return useMutation({
+    mutationFn: (data: ChangePasswordRequest) =>
+      UserService.changePassword(data),
+    meta: {
+      successMessage: 'Change password successfully',
+      errorMessage: 'Cannot change password'
+    }
+  });
+};
+
+/**
+ * Hook for follow
+ * @returns Mutation result for follow
  */
 export const useFollow = (
   username?: string
@@ -195,8 +215,8 @@ export const useFollow = (
 };
 
 /**
- * Hook for update profile
- * @returns Mutation result for login
+ * Hook for unfollow
+ * @returns Mutation result for unfollow
  */
 export const useUnfollow = (
   username?: string

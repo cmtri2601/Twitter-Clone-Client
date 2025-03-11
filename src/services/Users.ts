@@ -1,5 +1,6 @@
 import { axiosClient } from '~/api/axiosClient';
 import { UserEndpoints } from '~/api/endPoints';
+import { ChangePasswordRequest } from '~/dto/users/ChangePassword';
 import { ForgotPasswordRequest } from '~/dto/users/ForgotPassword';
 import { LoginRequest } from '~/dto/users/Login';
 import { LogoutRequest } from '~/dto/users/Logout';
@@ -102,6 +103,19 @@ export default class UserService {
   static async updateProfile(data: UpdateMeRequest) {
     const response = await axiosClient.patch(
       UserEndpoints.updateProfile(),
+      data
+    );
+    return response.data;
+  }
+
+  /**
+   * Update profile
+   * @param data
+   * @returns Promise with notification that login success or not
+   */
+  static async changePassword(data: ChangePasswordRequest) {
+    const response = await axiosClient.post(
+      UserEndpoints.changePassword(),
       data
     );
     return response.data;

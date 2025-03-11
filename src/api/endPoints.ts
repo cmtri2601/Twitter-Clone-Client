@@ -34,6 +34,9 @@ export const UserEndpoints = {
   /** Update profile */
   updateProfile: () => `/users/me`,
 
+  /** Change password */
+  changePassword: () => `/users/change-password`,
+
   /** Follow */
   follow: (id?: string) => `/users/${id}/follow`,
 

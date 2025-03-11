@@ -3,6 +3,7 @@ import {
   Eclipse,
   Ellipsis,
   House,
+  Lock,
   LogOut,
   Mail,
   Search,
@@ -12,6 +13,7 @@ import {
 import { useState } from 'react';
 import { Navigate, NavLink, Outlet } from 'react-router-dom';
 import { useAuth } from '~/components/auth/Auth';
+import { ChangePasswordDialog } from '~/components/common/dialog/ChangePassword';
 import { Username } from '~/components/common/Username';
 import { useTheme } from '~/components/dark-mode/theme-provider';
 import AlertDialog from '~/components/ui-custom/AlertDialog';
@@ -66,6 +68,10 @@ const Layout = () => {
 
   // State control alert dialog
   const [openAlertDialog, setOpenAlertDialog] = useState(false);
+
+  // State control change password dialog
+  const [openChangePasswordDialog, setOpenChangePasswordDialog] =
+    useState(false);
 
   // Open alert dialog
   const showAlertDialog = () => {
@@ -184,8 +190,18 @@ const Layout = () => {
                         </DropdownMenuPortal>
                       </DropdownMenuSub>
 
-                      {/* Logout button */}
+                      {/* Change password button */}
+                      <DropdownMenuItem
+                        onClick={() => {
+                          setOpenDropdown(false);
+                          setOpenChangePasswordDialog(true);
+                        }}
+                      >
+                        <Lock />
+                        <span>Change password</span>
+                      </DropdownMenuItem>
 
+                      {/* Logout button */}
                       <DropdownMenuItem
                         onClick={() => {
                           setOpenDropdown(false);
@@ -229,7 +245,9 @@ const Layout = () => {
                 />
               </div>
             </div>
+
             <Outlet />
+
             {/* Alert dialog */}
             <AlertDialog
               label='Log out of Twitter?'
@@ -238,6 +256,12 @@ const Layout = () => {
               open={openAlertDialog}
               setOpen={setOpenAlertDialog}
               onContinue={handleLogout}
+            />
+
+            {/* Change password dialog */}
+            <ChangePasswordDialog
+              open={openChangePasswordDialog}
+              setOpen={setOpenChangePasswordDialog}
             />
           </main>
         </SidebarProvider>

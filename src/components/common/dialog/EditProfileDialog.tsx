@@ -104,6 +104,7 @@ export function EditProfileDialog({ user, children }: EditProfileDialogProps) {
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent
         closeButtonCustom={true}
+        onOpenAutoFocus={(event) => event.preventDefault()}
         className='sm:max-w-[425px] h-1/2 p-0'
       >
         <Form {...form}>

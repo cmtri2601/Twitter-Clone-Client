@@ -11,6 +11,7 @@ import { uploadFile } from '~/utils/file';
 import { UserEndpoints } from './endPoints';
 import queryClient from './queryClient';
 import { queryKeys } from './queryKeys';
+import { shouldRetry } from '~/utils/retry';
 
 /**
  * Error response interface
@@ -81,9 +82,14 @@ axiosClient.interceptors.response.use(
   },
   async (error: AxiosError<ErrorResponse>) => {
     const originalRequest = error.config;
+    const url = originalRequest?.url;
 
     // Handle 401 Unauthorized errors
-    if (error.response?.status === HttpStatus.UNAUTHORIZED && originalRequest) {
+    if (
+      error.response?.status === HttpStatus.UNAUTHORIZED &&
+      originalRequest &&
+      shouldRetry(url)
+    ) {
       try {
         // Attempt to refresh token
         const refreshToken = localStorage.getItem(StorageKey.REFRESH_TOKEN);
@@ -102,7 +108,7 @@ axiosClient.interceptors.response.use(
         originalRequest.headers.Authorization = `Bearer ${accessToken}`;
 
         // Case logout need to change refresh token
-        if (originalRequest.url === UserEndpoints.logout()) {
+        if (url === UserEndpoints.logout()) {
           originalRequest.data = {
             refreshToken: newRefreshToken
           };
