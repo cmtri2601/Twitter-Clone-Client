@@ -4,6 +4,7 @@ import { useForm } from 'react-hook-form';
 import { Link, Navigate } from 'react-router-dom';
 import { z } from 'zod';
 import { useAuth } from '~/components/auth/Auth';
+import UnProtectedBackground from '~/components/common/UnProtectedBackground';
 import { ModeToggle } from '~/components/dark-mode/mode-toggle';
 import Textbox from '~/components/ui-custom/Form/Textbox';
 import H2 from '~/components/ui-custom/Typography/h2';
@@ -66,7 +67,7 @@ const Login = () => {
   }
 
   return (
-    <div className='flex h-screen items-center justify-center bg-primary'>
+    <UnProtectedBackground>
       <div className='h-screen w-screen sm:h-auto sm:w-3/6 md:w-5/12 lg:w-1/3 xl:w-1/4 bg-secondary flex items-center justify-center sm:rounded-lg p-5'>
         <div className='sm:w-4/5 2xl:w-2/3 flex flex-col items-center justify-center bg-secondary'>
           {/* icon */}
@@ -146,7 +147,7 @@ const Login = () => {
           </div>
         </div>
       </div>
-    </div>
+    </UnProtectedBackground>
   );
 };
 
