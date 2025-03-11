@@ -139,14 +139,7 @@ export const useGetMe = ({
     queryKey: [`users/me`],
     queryFn: () => UserService.getMe(),
     staleTime: Infinity,
-    refetchOnMount: false,
-    refetchOnWindowFocus: false,
-    refetchOnReconnect: false,
-    refetchInterval: 0,
-    retry: false,
-    enabled,
-    refetchIntervalInBackground: false,
-    retryOnMount: false
+    enabled
   });
 };
 
