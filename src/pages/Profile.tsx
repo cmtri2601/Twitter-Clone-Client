@@ -14,9 +14,11 @@ const Profile = () => {
     auth: { user }
   } = useAuth();
 
+  // Check user is verified
+  const isVerified = user?.status === UserStatus.VERIFIED;
+
   // Verify text
-  const verifyText =
-    user?.status === UserStatus.VERIFIED ? 'Verified' : 'Unverified';
+  const verifyText = isVerified ? 'Verified' : 'Unverified';
 
   // Mutation hooks
   const resendVerifyEmail = useResendVerifyEmail();
@@ -34,11 +36,13 @@ const Profile = () => {
           {/* Username */}
           <div className='w-full'>
             <span className='font-bold mr-3'>{`@${user?.username}`}</span>
-            <EditProfileDialog user={user}>
-              <Button className='h-7' variant={'secondary'}>
-                Edit profile
-              </Button>
-            </EditProfileDialog>
+            {isVerified && (
+              <EditProfileDialog user={user}>
+                <Button className='h-7' variant={'secondary'}>
+                  Edit profile
+                </Button>
+              </EditProfileDialog>
+            )}
           </div>
           {/* Post - Followers - Following */}
           <div className='w-full flex items-center justify-between'>
@@ -67,7 +71,7 @@ const Profile = () => {
         </div>
       </div>
 
-      {user?.status === UserStatus.VERIFIED ? (
+      {isVerified ? (
         <>
           <Separator className='my-1' />
           <div className='w-full'>

@@ -6,10 +6,11 @@ import axios, {
 } from 'axios';
 import { HttpStatus } from '~/constants/HttpStatus';
 import { StorageKey } from '~/constants/StorageKey';
-import { UserEndpoints } from './endPoints';
 import { Media } from '~/dto/common/Media';
 import { uploadFile } from '~/utils/file';
-import { globalRouter } from '~/routes';
+import { UserEndpoints } from './endPoints';
+import queryClient from './queryClient';
+import { queryKeys } from './queryKeys';
 
 /**
  * Error response interface
@@ -112,9 +113,7 @@ axiosClient.interceptors.response.use(
       } catch (error) {
         localStorage.removeItem(StorageKey.ACCESS_TOKEN);
         localStorage.removeItem(StorageKey.REFRESH_TOKEN);
-        if (globalRouter.logout) {
-          globalRouter.logout();
-        }
+        queryClient.setQueryData(queryKeys.users.me, null);
         return Promise.reject(error);
       }
     }

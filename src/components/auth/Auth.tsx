@@ -1,12 +1,10 @@
 import { useQueryClient } from '@tanstack/react-query';
 import { createContext, useContext, useMemo } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
 import { queryKeys } from '~/api/queryKeys';
 import { StorageKey } from '~/constants/StorageKey';
 import { User } from '~/dto/common/User';
 import Loading from '~/pages/Loading';
 import { useGetMe } from '~/queries/Users';
-import { globalRouter } from '~/routes';
 
 type AuthType = {
   isLogin: boolean;
@@ -34,32 +32,14 @@ const initialState: AuthProviderState = {
 const AuthProviderContext = createContext<AuthProviderState>(initialState);
 
 export function AuthProvider({ children }: AuthProviderProps) {
-  // Check if login by oauth => don't fetch user (cause don't have access token => navigate to login)
-  const { pathname } = useLocation();
-  const isLoginWithOAuth = pathname.includes('/oauth/');
-
   //  Get user data
-  const {
-    isLoading,
-    isSuccess,
-    data: res
-  } = useGetMe({ enabled: !isLoginWithOAuth });
+  const { isLoading, isSuccess, data: res } = useGetMe();
   const user = res?.data;
 
   console.log('auth-provider...', isLoading, isSuccess, user);
 
   // Query client to trigger get user
   const queryClient = useQueryClient();
-
-  // Assign navigate hook to global router
-  const navigate = useNavigate();
-  globalRouter.navigate = navigate;
-  globalRouter.logout = () => {
-    localStorage.removeItem(StorageKey.ACCESS_TOKEN);
-    localStorage.removeItem(StorageKey.REFRESH_TOKEN);
-    queryClient.setQueryData(queryKeys.users.me, null);
-    navigate('/login');
-  };
 
   // Return of useAuth hook
   const value = useMemo(

@@ -7,18 +7,21 @@ import { ThemeProvider } from '~/components/dark-mode/theme-provider';
 import { Toaster } from '~/components/ui/sonner';
 import ErrorFallback from '~/pages/ErrorFallback';
 import router from '~/routes';
+import { AuthProvider } from './components/auth/Auth';
 
 const App = () => {
   return (
     <ErrorBoundary FallbackComponent={ErrorFallback}>
       <QueryClientProvider client={queryClient}>
-        <ThemeProvider defaultTheme='system' storageKey='vite-ui-theme'>
-          <RouterProvider
-            future={{ v7_startTransition: true }}
-            router={router}
-          />
-          <Toaster />
-        </ThemeProvider>
+        <AuthProvider>
+          <ThemeProvider defaultTheme='system' storageKey='vite-ui-theme'>
+            <RouterProvider
+              future={{ v7_startTransition: true }}
+              router={router}
+            />
+            <Toaster />
+          </ThemeProvider>
+        </AuthProvider>
         <ReactQueryDevtools
           initialIsOpen={false}
           buttonPosition='bottom-right'

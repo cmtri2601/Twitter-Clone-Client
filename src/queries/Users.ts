@@ -130,16 +130,11 @@ export const useResendVerifyEmail = (): UseMutationResult<null, Error> => {
  * Hook for get login user information
  * @returns User
  */
-export const useGetMe = ({
-  enabled = true
-}: {
-  enabled?: boolean;
-}): UseQueryResult<AxiosResponse<User>> => {
+export const useGetMe = (): UseQueryResult<AxiosResponse<User>> => {
   return useQuery({
     queryKey: [`users/me`],
     queryFn: () => UserService.getMe(),
-    staleTime: Infinity,
-    enabled
+    staleTime: Infinity
   });
 };
 

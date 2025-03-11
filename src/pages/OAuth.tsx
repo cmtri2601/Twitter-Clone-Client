@@ -6,6 +6,8 @@ import { useAuth } from '~/components/auth/Auth';
 const OAuth = () => {
   const params = useParams();
   const [searchParams] = useSearchParams();
+
+  // Ref to clean up toast after useEffect
   const toastId = useRef<string | number | null>(null);
 
   // Auth
